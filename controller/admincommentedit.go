@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
+	"gitee.com/yzqdev/goji/pat"
 	"github.com/rs/xid"
-	"goji.io/pat"
 	"goyoubbs/model"
 	"goyoubbs/util"
 	"net/http"

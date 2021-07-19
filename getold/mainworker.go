@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"github.com/weint/httpclient"
 	"goyoubbs/model"
 	"goyoubbs/system"

@@ -3,9 +3,9 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/goji/pat"
+	"gitee.com/yzqdev/youdb"
 	"github.com/rs/xid"
-	"goji.io/pat"
 	"goyoubbs/model"
 	"goyoubbs/util"
 	"io"

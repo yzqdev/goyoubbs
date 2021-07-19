@@ -1,9 +1,9 @@
 package router
 
 import (
+	"gitee.com/yzqdev/goji"
+	"gitee.com/yzqdev/goji/pat"
 	"github.com/dchest/captcha"
-	"goji.io"
-	"goji.io/pat"
 	"goyoubbs/controller"
 	"goyoubbs/system"
 )

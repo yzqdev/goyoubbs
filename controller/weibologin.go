@@ -2,7 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"github.com/rs/xid"
 	"goyoubbs/lib/weiboOAuth"
 	"goyoubbs/model"

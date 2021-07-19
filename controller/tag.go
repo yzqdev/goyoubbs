@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"goji.io/pat"
+	"gitee.com/yzqdev/goji/pat"
 	"goyoubbs/model"
 	"net/http"
 	"strconv"

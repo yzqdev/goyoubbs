@@ -3,7 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"errors"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"goyoubbs/model"
 	"goyoubbs/system"
 	"html/template"

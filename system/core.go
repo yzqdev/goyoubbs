@@ -4,7 +4,7 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"github.com/gorilla/securecookie"
 	"github.com/qiniu/api.v7/storage"
 	"github.com/weint/config"

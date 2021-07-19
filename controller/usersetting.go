@@ -3,7 +3,7 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"github.com/rs/xid"
 	"goyoubbs/model"
 	"goyoubbs/util"

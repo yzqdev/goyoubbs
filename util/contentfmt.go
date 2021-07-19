@@ -3,7 +3,7 @@ package util
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"github.com/shurcooL/github_flavored_markdown"
 	"regexp"
 	"strconv"

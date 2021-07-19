@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/ego008/youdb"
-	"goji.io/pat"
+	"gitee.com/yzqdev/goji/pat"
+	"gitee.com/yzqdev/youdb"
 	"goyoubbs/model"
 	"net/http"
 	"strconv"

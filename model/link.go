@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"sort"
 )
 

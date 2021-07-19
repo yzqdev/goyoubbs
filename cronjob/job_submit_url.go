@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"goyoubbs/model"
 	"goyoubbs/system"
 	"io/ioutil"

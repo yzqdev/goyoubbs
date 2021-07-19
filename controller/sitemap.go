@@ -2,7 +2,7 @@ package controller
 
 import (
 	"bytes"
-	"github.com/ego008/youdb"
+	"gitee.com/yzqdev/youdb"
 	"goyoubbs/util"
 	"io/ioutil"
 	"net/http"
