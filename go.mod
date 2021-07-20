@@ -25,11 +25,11 @@ require (
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d // indirect
 	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e // indirect
-	github.com/weint/config v0.0.0-20170804020532-16809f7a2214
+	github.com/spf13/viper v1.8.1
 	github.com/weint/httpclient v0.0.0-20180504101821-32544e5b5992
 	github.com/xi2/httpgzip v0.0.0-20190509075255-932ab5e254ae
-	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
-	golang.org/x/net v0.0.0-20200222033325-078779b8f2d8
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 	gopkg.in/h2non/filetype.v1 v1.0.5
 	qiniupkg.com/x v7.0.8+incompatible // indirect
 )

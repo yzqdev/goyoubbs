@@ -27,7 +27,10 @@ func (h *BaseHandler) QQOauthHandler(w http.ResponseWriter, r *http.Request) {
 
 	urlStr, err := qq.GetAuthorizationURL(qqUrlState)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		_, err := w.Write([]byte(err.Error()))
+		if err != nil {
+			return
+		}
 		return
 	}
 

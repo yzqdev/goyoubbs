@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"flag"
 	"gitee.com/yzqdev/goji"
 	"gitee.com/yzqdev/goji/pat"
 	"github.com/xi2/httpgzip"
@@ -26,10 +25,7 @@ import (
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	configFile := flag.String("config", "config/config.yaml", "full path of config.yaml file")
-	flag.Parse()
-
-	c := system.LoadConfig(*configFile)
+	c := system.LoadConfig()
 	app := &system.Application{}
 	app.Init(c, os.Args[0])
 

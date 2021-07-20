@@ -1,13 +1,14 @@
 package system
 
 import (
+	"fmt"
+	"github.com/spf13/viper"
 	"log"
 	"runtime"
 
 	"gitee.com/yzqdev/youdb"
 	"github.com/gorilla/securecookie"
 	"github.com/qiniu/api.v7/storage"
-	"github.com/weint/config"
 	"goyoubbs/util"
 	"net/url"
 	"strings"
@@ -86,17 +87,27 @@ type Application struct {
 	QnZone *storage.Zone
 }
 
-func LoadConfig(filename string) *config.Engine {
-	c := &config.Engine{}
-	c.Load(filename)
-	return c
+func LoadConfig() *viper.Viper {
+	viper.SetConfigName("config") // name of config file (without extension)
+	viper.SetConfigType("yaml")   // REQUIRED if the config file does not have the extension in the name
+
+	viper.AddConfigPath("config") // path to look for the config file in
+	err := viper.ReadInConfig()   // Find and read the config file
+	if err != nil {               // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %w \n", err))
+	}
+
+	return viper.GetViper()
 }
 
-func (app *Application) Init(c *config.Engine, currentFilePath string) {
+func (app *Application) Init(c *viper.Viper, currentFilePath string) {
 
 	mcf := &MainConf{}
-	c.GetStruct("Main", mcf)
+	err := c.UnmarshalKey("Main", mcf)
+	if err != nil {
 
+		return
+	}
 	// check domain
 	if strings.HasPrefix(mcf.Domain, "http") {
 		dm, err := url.Parse(mcf.Domain)
@@ -109,7 +120,10 @@ func (app *Application) Init(c *config.Engine, currentFilePath string) {
 	}
 
 	scf := &SiteConf{}
-	c.GetStruct("Site", scf)
+	err2 := c.UnmarshalKey("Site", scf)
+	if err2 != nil {
+		return
+	}
 	scf.GoVersion = runtime.Version()
 	fMd5, _ := util.HashFileMD5(currentFilePath)
 	scf.MD5Sums = fMd5
