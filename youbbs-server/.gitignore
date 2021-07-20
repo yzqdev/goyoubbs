@@ -1,0 +1,11 @@
+goyoubbs.exe
+goyoubbs
+
+.idea
+go.sum
+tmp
+build
+*.lock
+*.db
+
+static/avatar
