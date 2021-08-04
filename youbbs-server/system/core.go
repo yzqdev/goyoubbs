@@ -6,10 +6,10 @@ import (
 	"log"
 	"runtime"
 
-	"gitee.com/yzqdev/youdb"
 	"github.com/gorilla/securecookie"
 	"github.com/qiniu/api.v7/storage"
 	"goyoubbs/util"
+	"goyoubbs/youdb"
 	"net/url"
 	"strings"
 )

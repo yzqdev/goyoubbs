@@ -2,9 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"gitee.com/yzqdev/youdb"
 	"github.com/rs/xid"
 	"goyoubbs/model"
+	"goyoubbs/youdb"
 	"net/http"
 	"strconv"
 )

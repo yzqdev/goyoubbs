@@ -2,11 +2,11 @@ package cronjob
 
 import (
 	"encoding/json"
-	"gitee.com/yzqdev/youdb"
 	"github.com/boltdb/bolt"
 	"github.com/weint/httpclient"
 	"goyoubbs/model"
 	"goyoubbs/system"
+	"goyoubbs/youdb"
 	"os"
 	"strconv"
 	"strings"

@@ -2,8 +2,8 @@ package controller
 
 import (
 	"bytes"
-	"gitee.com/yzqdev/youdb"
 	"goyoubbs/util"
+	"goyoubbs/youdb"
 	"io/ioutil"
 	"net/http"
 	"os"

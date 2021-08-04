@@ -2,12 +2,12 @@ package controller
 
 import (
 	"encoding/json"
-	"gitee.com/yzqdev/goji/pat"
-	"gitee.com/yzqdev/youdb"
 	"github.com/dchest/captcha"
 	"github.com/rs/xid"
+	"goyoubbs/goji/pat"
 	"goyoubbs/model"
 	"goyoubbs/util"
+	"goyoubbs/youdb"
 	"net/http"
 	"strconv"
 	"strings"

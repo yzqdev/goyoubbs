@@ -3,7 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"gitee.com/yzqdev/youdb"
+	"goyoubbs/youdb"
 )
 
 type User struct {

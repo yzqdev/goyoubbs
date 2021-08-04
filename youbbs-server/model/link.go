@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	"gitee.com/yzqdev/youdb"
+	"goyoubbs/youdb"
 	"sort"
 )
 

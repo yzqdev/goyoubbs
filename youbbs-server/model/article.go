@@ -3,8 +3,8 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"gitee.com/yzqdev/youdb"
 	"goyoubbs/util"
+	"goyoubbs/youdb"
 	"html"
 	"sort"
 	"strings"

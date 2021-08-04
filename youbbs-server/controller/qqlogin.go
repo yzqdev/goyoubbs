@@ -2,11 +2,11 @@ package controller
 
 import (
 	"encoding/json"
-	"gitee.com/yzqdev/youdb"
 	"github.com/rs/xid"
 	"goyoubbs/lib/qqOAuth"
 	"goyoubbs/model"
 	"goyoubbs/util"
+	"goyoubbs/youdb"
 	"net/http"
 	"strconv"
 	"strings"

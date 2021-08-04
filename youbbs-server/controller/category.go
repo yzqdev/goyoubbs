@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"gitee.com/yzqdev/goji/pat"
-	"gitee.com/yzqdev/youdb"
+	"goyoubbs/goji/pat"
 	"goyoubbs/model"
+	"goyoubbs/youdb"
 	"net/http"
 	"strconv"
 )

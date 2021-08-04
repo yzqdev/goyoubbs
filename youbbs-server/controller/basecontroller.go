@@ -3,9 +3,9 @@ package controller
 import (
 	"encoding/json"
 	"errors"
-	"gitee.com/yzqdev/youdb"
 	"goyoubbs/model"
 	"goyoubbs/system"
+	"goyoubbs/youdb"
 	"html/template"
 	"net/http"
 	"regexp"

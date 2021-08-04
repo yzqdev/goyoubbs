@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"gitee.com/yzqdev/goji/pat"
+	"goyoubbs/goji/pat"
 	"io/ioutil"
 	"net/http"
 )
