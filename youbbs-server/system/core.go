@@ -143,7 +143,7 @@ func (app *Application) Init(c *viper.Viper, currentFilePath string) {
 		log.Fatalf("Connect Error: %v", err)
 	}
 	app.Db = db
-
+	defer app.Db.Close()
 	// set main node
 	db.Hset("keyValue", []byte("main_category"), []byte(scf.MainNodeIds))
 
@@ -170,6 +170,6 @@ func (app *Application) Init(c *viper.Viper, currentFilePath string) {
 }
 
 func (app *Application) Close() {
-	app.Db.Close()
+	defer app.Db.Close()
 	log.Println("db cloded")
 }

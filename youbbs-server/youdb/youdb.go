@@ -7,7 +7,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
-	"github.com/boltdb/bolt"
+	bolt "go.etcd.io/bbolt"
 	"reflect"
 	"strconv"
 	"time"

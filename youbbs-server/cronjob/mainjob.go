@@ -2,8 +2,8 @@ package cronjob
 
 import (
 	"encoding/json"
-	"github.com/boltdb/bolt"
 	"github.com/weint/httpclient"
+	bolt "go.etcd.io/bbolt"
 	"goyoubbs/model"
 	"goyoubbs/system"
 	"goyoubbs/youdb"
