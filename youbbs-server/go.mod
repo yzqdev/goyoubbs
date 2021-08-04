@@ -29,5 +29,7 @@ require (
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 	gopkg.in/h2non/filetype.v1 v1.0.5
+	gorm.io/driver/sqlite v1.1.4
+	gorm.io/gorm v1.21.12
 	qiniupkg.com/x v7.0.8+incompatible // indirect
 )
