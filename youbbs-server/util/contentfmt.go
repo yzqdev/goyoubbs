@@ -3,7 +3,6 @@ package util
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/shurcooL/github_flavored_markdown"
 	"goyoubbs/youdb"
 	"regexp"
 	"strconv"
@@ -40,7 +39,7 @@ func ContentFmt(db *youdb.DB, mdm, input string) string {
 	input = imgRegexp.ReplaceAllString(input, `![]($1)`) // bug  会替换掉包括代码块里的url
 
 	text := youdb.S2b(input)
-	md := youdb.B2s(github_flavored_markdown.Markdown(text))
+	md := youdb.B2s(text) //这里不适用 github.com/shurcooL/github_flavored_markdown
 
 	// 链接加_blank 点击计数
 	if strings.Contains(md, "<a ") {
@@ -92,7 +91,7 @@ func ContentFmt(db *youdb.DB, mdm, input string) string {
 	return md
 }
 
-// 文本格式化
+// ContentFmtBak 文本格式化
 func ContentFmtBak(db *youdb.DB, input string) string {
 	if strings.Index(input, "```") >= 0 {
 		sepNum := strings.Count(input, "```")

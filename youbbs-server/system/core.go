@@ -170,6 +170,6 @@ func (app *Application) Init(c *viper.Viper, currentFilePath string) {
 }
 
 func (app *Application) Close() {
-	defer app.Db.Close()
+	app.Db.Close()
 	log.Println("db cloded")
 }
