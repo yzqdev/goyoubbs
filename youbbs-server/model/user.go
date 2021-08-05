@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"github.com/gookit/color"
 	"goyoubbs/youdb"
 )
 
@@ -61,6 +62,7 @@ func UserGetByName(db *youdb.DB, name string) (User, error) {
 	obj := User{}
 
 	rs := db.Hget("user_name2uid", []byte(name))
+	color.Redln(rs.State)
 	if rs.State == "ok" {
 		rs2 := db.Hget("user", rs.Data[0])
 		if rs2.State == "ok" {

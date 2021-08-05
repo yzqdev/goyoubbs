@@ -102,9 +102,9 @@
 
 
             {{if eq .CurrentUser.Flag 99}}
-            <div class="nav-title">管理员面板 <a href="https://www.youbbs.org/">youBBS官方支持</a></div>
+            <div class="nav-title">管理员面板 ></div>
             <div class="card-body card-body-node">
-                <div class="btn">
+                <div class="btn btn-outline-primary">
                     <a href="/admin/category/list">分类管理</a>
                     <a href="/admin/user/list">用户管理</a>
                     <a href="/admin/link/list">链接管理</a>
@@ -152,7 +152,7 @@
 {{if .Relative.Tags}}
 <div class="nav-title">相邻的标签</div>
 <div class="card-body card-body-node">
-    <div class="btn">
+    <div class="btn btn-outline-primary">
         {{range $_, $item := .Relative.Tags}}<a href="/tag/{{$item}}">{{$item}}</a> {{ end }}
         <div class="c"></div>
     </div>
@@ -164,7 +164,7 @@
 {{if .NewestNodes}}
 <div class="nav-title">新增主题</div>
 <div class="card-body card-body-node">
-    <div class="btn">
+    <div class="btn btn-outline-primary">
         {{range $_, $v := .NewestNodes}}
         <a href="/n/{{$v.Id}}">{{$v.Name}}</a>
         {{end}}
@@ -177,7 +177,7 @@
 {{if .HotNodes}}
 <div class="nav-title">热门主题</div>
 <div class="card-body card-body-node">
-    <div class="btn">
+    <div class="btn btn-outline-primary">
         {{range $_, $v := .HotNodes}}
         <a href="/n/{{$v.Id}}">{{$v.Name}}</a>
         {{end}}
@@ -191,7 +191,7 @@
 {{if .Links}}
 <div class="nav-title">链接</div>
 <div class="card-body card-body-node">
-    <div class="btn">
+    <div class="btn btn-outline-primary">
         {{range $_, $v := .Links}}
         <a href="{{$v.Url}}" target="_blank">{{$v.Name}}</a>
         {{end}}

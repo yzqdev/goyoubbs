@@ -39,10 +39,17 @@
 <div class="card-body">
 
     <form action="/login" method="post" onsubmit="return form_post();">
-        <p><label>登录名： <input type="text" id="name" class="form-control" value="" /></label>  <span class="fs12">允许字母、数字、中文，不能全为数字，4~12个字节</span></p>
-        <p><label>密　码： <input type="text" id="password" class="form-control" value="" /></label></p>
 
-        <p><input type="submit" value=" 添加 " id="submit" class="textbtn btn btn-primary" style="margin-left:60px;" /> </p>
+<div class="mb-3">
+    <label for="name" >登录名： </label>
+    <input type="text" id="name" class="form-control" value="" />允许字母、数字、中文，不能全为数字，4~12个字节
+
+</div><div class="mb-3">
+    <label for="password" >密　码：</label>
+    <input type="text" id="password" class="form-control" value="" />
+
+</div>
+       <input type="submit" value=" 添加 " id="submit" class="textbtn btn btn-primary"  />
     </form>
 
 </div>

@@ -1,36 +1,29 @@
 {{ define "content" }}
-
-<a name="1"></a>
+<div class="card">
 <div class="card-header"><a href="/">{{.SiteCf.Name}}</a> &raquo; 设置</div>
 <div class="card-body">
     <form method="post" action="/setting#1" onsubmit="return form_base_post();">
-    <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-        <tbody><tr>
-            <td width="120" align="right">用户名</td>
-            <td width="auto" align="left">{{.Uobj.Name}}</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">电子邮件</td>
-            <td width="auto" align="left"><input type="text" class="form-control" id="email" value="{{.Uobj.Email}}" /> 不公开，仅供取回密码，务必正确填写且记住。</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">个人网站</td>
-            <td width="auto" align="left"><input type="text" class="sl" id="url" value="{{.Uobj.Url}}" /> http://...</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">个人简介</td>
-            <td width="auto" align="left"><textarea class="ml" id="about">{{.Uobj.About}}</textarea></td>
-        </tr>
-        <tr>
-            <td width="120" align="right"></td>
-            <td width="auto" align="left"><input type="submit" value="保存设置" name="submit" class="textbtn" /></td>
-        </tr>
 
-        </tbody></table>
+        <div class="mb-3">
+            <label for="username" class="form-label">用户名</label>
+            <input type="text" class="form-control" value="{{.Uobj.Name}}" id="username" placeholder="name@example.com">
+        </div>  <div class="mb-3">
+            <label for="email" class="form-label">邮箱</label>
+            <input type="text" class="form-control" value="{{.Uobj.Email}}" id="email" placeholder="name@example.com">不公开，仅供取回密码，务必正确填写且记住
+        </div>
+        <div class="mb-3">
+            <label for="personsite" class="form-label">用户名</label>
+            <input type="text" class="form-control" value="{{.Uobj.Name}}" id="personsite" placeholder="name@example.com">
+        </div> <div class="mb-3">
+            <label for="about" class="form-label">个人简介</label>
+            <input type="text" class="form-control" value="{{.Uobj.About}}" id="about" placeholder="name@example.com">
+        </div>
+
+        <input type="submit" value="保存设置" name="submit" class="btn btn-outline-primary" />
     </form>
 
 </div>
-
+</div>
 <script>
 
     function form_base_post(){
@@ -56,33 +49,34 @@
 
 </script>
 
-<a name="2"></a>
-<div class="card-header">设置头像</div>
-<div class="card-body">
-    <form action="/setting#2" enctype="multipart/form-data" method="post">
-    <input type="hidden" name="act" value="avatar" />
-    <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
-    <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-        <tbody><tr>
-            <td width="120" align="right">当前头像</td>
-            <td width="auto" align="left">
-                <img id="av24" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar24" border="0" align="default" auto=""> &nbsp;
-                <img id="av48" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar48" border="0" align="default" auto=""> &nbsp;
-                <img id="av73" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar73" border="0" align="default" auto="">
-            </td>
-        </tr>
-        <tr>
-            <td width="120" align="right">选择头像图片</td>
-            <td width="auto" align="left"><input id="avatar" name="avatar" accept="image/*" type="file" /> (最大300K)</td>
-        </tr>
-        <tr>
-            <td width="120" align="right"></td>
-            <td width="auto" align="left"><input id="avatar_submit" type="submit" value="更新头像" name="submit" class="textbtn" /></td>
-        </tr>
+<div class="card">
+    <div class="card-header">设置头像</div>
+    <div class="card-body">
+        <form action="/setting#2" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="act" value="avatar" />
+            <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
+            <table  class="fs12">
+                <tbody><tr>
+                    <td  >当前头像</td>
+                    <td  >
+                        <img id="av24" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar24" border="0" align="default" auto=""> &nbsp;
+                        <img id="av48" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar48" border="0" align="default" auto=""> &nbsp;
+                        <img id="av73" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar73" border="0" align="default" auto="">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120" align="right">选择头像图片</td>
+                    <td width="auto" align="left"><input id="avatar" name="avatar" accept="image/*" type="file" /> (最大300K)</td>
+                </tr>
+                <tr>
+                    <td width="120" align="right"></td>
+                    <td width="auto" align="left"><input id="avatar_submit" type="submit" value="更新头像" name="submit" class="btn btn-outline-primary" /></td>
+                </tr>
 
-        </tbody></table>
-    </form>
+                </tbody></table>
+        </form>
 
+    </div>
 </div>
 
 <script>
@@ -120,35 +114,28 @@
 
 
 {{if .Uobj.Password}}
-
-<a name="3"></a>
+<div class="card">
 <div class="card-header">更改密码</div>
 <div class="card-body">
     <form method="post" action="/setting#3" onsubmit="return form_pw_post();">
-    <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-        <tbody>
-        <tr>
-            <td width="120" align="right">当前密码</td>
-            <td width="auto" align="left"><input type="password" class="sl" id="password0" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right">新密码</td>
-            <td width="auto" align="left"><input type="password" class="sl" id="password" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right">再次输入新密码</td>
-            <td width="auto" align="left"><input type="password" class="sl" id="password2" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right"></td>
-            <td width="auto" align="left"><input type="submit" value="更改密码" name="submit" class="textbtn" /></td>
-        </tr>
 
-        </tbody></table>
+        <div class="mb-3">
+            <label for="password0" class="form-label">当前密码</label>
+            <input type="password" class="form-control" id="password0" placeholder=" ">
+        </div><div class="mb-3">
+            <label for="password" class="form-label">新密码</label>
+            <input type="password" class="form-control" id="password" placeholder=" ">
+        </div><div class="mb-3">
+            <label for="password2" class="form-label">再次输入新密码</label>
+            <input type="password" class="form-control" id="password2" placeholder="">
+        </div>
+
+
+        <input type="submit" value="更改密码" name="submit" class="btn btn-outline-primary" />
     </form>
 
 </div>
-
+</div>
 <script>
 
     function form_pw_post(){
@@ -209,7 +196,7 @@
         </tr>
         <tr>
             <td width="120" align="right"></td>
-            <td width="auto" align="left"><input type="submit" value="设置登录密码" name="submit" class="textbtn" /></td>
+            <td width="auto" align="left"><input type="submit" value="设置登录密码" name="submit" class="btn btn-outline-primary" /></td>
         </tr>
 
         </tbody></table>

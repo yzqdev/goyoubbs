@@ -153,13 +153,13 @@
 {{ define "side" }}
 
 {{if eq .CurrentUser.Flag 99}}
-<div class="sider-box">
-    <div class="card-header">管理员面板 （<a href="https://www.youbbs.org/" target="_blank">YouBBS官方支持</a>）</div>
-    <div class="sider-box-content">
-        <div class="btn">
-            <a href="/admin/category/list">分类管理</a>
-            <a href="/admin/user/list">用户管理</a>
-            <a href="/admin/link/list">链接管理</a>
+<div class="card">
+    <div class="card-header">管理员面板  </div>
+    <div class="card-body">
+        <div class="add">
+            <a class="btn btn-primary" href="/admin/category/list">分类管理</a>
+            <a class="btn btn-primary" href="/admin/user/list">用户管理</a>
+            <a class="btn btn-primary" href="/admin/link/list">链接管理</a>
         </div>
         <div class="c"></div>
     </div>
@@ -168,12 +168,12 @@
 
 
 {{if .HotNodes}}
-<div class="sider-box">
+<div class="card">
     <div class="card-header">热门主题</div>
-    <div class="sider-box-content">
-        <div class="btn">
+    <div class="card-body">
+        <div >
             {{range $_, $v := .HotNodes}}
-            <a href="/n/{{$v.Id}}">{{$v.Name}}</a>
+            <a class="btn btn-outline-primary" href="/n/{{$v.Id}}">{{$v.Name}}</a>
             {{end}}
         </div>
         <div class="c"></div>
@@ -183,10 +183,10 @@
 
 {{if eq .PageName "article_detail"}}
 {{if .Relative.Tags}}
-<div class="sider-box">
+<div class="card">
     <div class="card-header">相邻的标签</div>
-    <div class="sider-box-content">
-        <div class="btn">{{range $_, $item := .Relative.Tags}}<a href="/tag/{{$item}}">{{$item}}</a> {{ end }}</div>
+    <div class="card-body">
+        <div >{{range $_, $item := .Relative.Tags}}<a class="btn btn-outline-primary" href="/tag/{{$item}}">{{$item}}</a> {{ end }}</div>
         <div class="c"></div>
     </div>
 </div>
@@ -195,12 +195,12 @@
 
 
 {{if .NewestNodes}}
-<div class="sider-box">
+<div class="card">
     <div class="card-header">新增主题</div>
-    <div class="sider-box-content">
-        <div class="btn">
+    <div class="card-body">
+        <div >
             {{range $_, $v := .NewestNodes}}
-            <a href="/n/{{$v.Id}}">{{$v.Name}}</a>
+            <a class="btn btn-outline-primary" href="/n/{{$v.Id}}">{{$v.Name}}</a>
             {{end}}
         </div>
         <div class="c"></div>
@@ -210,10 +210,10 @@
 
 {{if eq .PageName "home"}}
 {{if .Links}}
-<div class="sider-box">
+<div class="card">
     <div class="card-header">链接</div>
-    <div class="sider-box-content">
-        <div class="btn">
+    <div class="card-body">
+        <div class="btn btn-outline-primary">
             {{range $_, $v := .Links}}
             <a href="{{$v.Url}}" target="_blank">{{$v.Name}}</a>
             {{end}}
@@ -224,9 +224,9 @@
 {{ end }}
 
 {{if .SiteInfo}}
-<div class="sider-box">
+<div class="card">
     <div class="card-header">本站已稳定运行 {{.SiteInfo.Days}} 天</div>
-    <div class="sider-box-content">
+    <div class="card-body">
         <ul>
             <li>会员: {{.SiteInfo.UserNum}}</li>
             <li>帖子: {{.SiteInfo.PostNum}}</li>
