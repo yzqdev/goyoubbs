@@ -34,7 +34,7 @@
             <div class="mb-3">
                 <label class="form-label">隐藏用户</label>
 
-                <label><input type="checkbox" id="id-hidden" value="1" {{if .Uobj.Hidden}}checked="checked"{{end}} /> 隐藏</label>
+                <label><input class="form-check-input" type="checkbox" id="id-hidden" value="1" {{if .Uobj.Hidden}}checked="checked"{{end}} /> 隐藏</label>
 
             </div>
             <div class="mb-3">
@@ -193,7 +193,7 @@
             $.ajax({
                 type: "POST",
                 url: "/admin/user/edit/{{.Uobj.Id}}",
-                data: JSON.stringify({'act': 'change_pw', 'password': md5(password)}),
+                data: JSON.stringify({'act': 'change_pw', 'password':   md5(password)}),
                 dataType: "json",
                 contentType: "application/json",
                 success: function(data){

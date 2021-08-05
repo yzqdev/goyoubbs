@@ -35,9 +35,13 @@
 <div class="card-body">
 
     <form action="" method="post" onsubmit="return form_post();">
-        <p>
-            <label><input type="checkbox" id="id-hidden" value="1" {{if .Cobj.Hidden}}checked="checked"{{end}} /> 隐藏</label>
-        </p>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="id-hidden" value="1" {{if .Cobj.Hidden}}checked="checked"{{end}} >
+            <label class="form-check-label" for="id-hidden">
+                隐藏
+            </label>
+        </div>
+
         <p>分类名称： <input type="text" class="form-control" id="name" value="{{.Cobj.Name}}" /><br/>
             分类简介： (255个字节以内)<br/>
             <textarea class="form-control" id="about">{{.Cobj.About}}</textarea><br/>

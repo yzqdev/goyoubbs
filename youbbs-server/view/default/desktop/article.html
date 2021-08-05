@@ -10,7 +10,7 @@
 
 <div class="card-body">
     <div class="topic-title">
-        <div class="topic-title-main float-left">
+        <div class="topic-title-main  ">
             <h1>{{.Aobj.Title}}</h1>
             <div class="topic-title-date">
                 By <a href="/member/{{.Aobj.Uid}}">{{.Aobj.Name}}</a>
@@ -30,7 +30,6 @@
         </div>
         <div class="detail-avatar">
             <a href="/member/{{.Aobj.Uid}}"><img src="/static/avatar/{{.Aobj.Avatar}}.jpg" alt="{{.Aobj.Name}}" /></a></div>
-        <div class="c"></div>
     </div>
     <div class="topic-content">
 
@@ -41,10 +40,10 @@
         {{if .Aobj.Tags}}
         <div class="c"></div>
         <br/>
-        <p class="mytag float-left">{{.Aobj.TagStr}}</p>
+        <p class="mytag  ">{{.Aobj.TagStr}}</p>
         {{end}}
 
-        <div class="c"></div>
+
         <br/>
 
         {{if .Relative.Articles}}
@@ -55,9 +54,9 @@
                 <li><a href="/topic/{{$item.Id}}" title="{{$item.Title}}">{{$item.Title}}</a></li>
                 {{end}}
 
-                <div class="c"></div>
+
             </ul>
-            <div class="c"></div>
+
         </div>
         {{end}}
 
