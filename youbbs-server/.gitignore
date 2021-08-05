@@ -9,3 +9,4 @@ build
 *.db
 
 static/avatar
+static/upload
