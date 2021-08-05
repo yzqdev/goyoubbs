@@ -4,7 +4,7 @@
     <a href="/">{{.SiteCf.Name}}</a> &raquo; - 编辑用户 {{.Uobj.Name}}
 </div>
 
-    <div class="main-box">
+    <div class="card-body">
         <form method="post" action="" onsubmit="return form_flag_post();">
         <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
             <tbody>
@@ -33,7 +33,7 @@
 
 <a name="1"></a>
 <div class="nav-title">基本资料 <span class="red">{{.Uobj.Name}}</span></div>
-<div class="main-box">
+<div class="card-body">
     <form method="post" action="" onsubmit="return form_base_post();">
     <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
         <tbody>
@@ -70,7 +70,7 @@
 
 <a name="2"></a>
 <div class="nav-title">为<span class="red">{{.Uobj.Name}}</span>设置头像</div>
-<div class="main-box">
+<div class="card-body">
     <form action="" enctype="multipart/form-data" method="post">
         <input type="hidden" name="act" value="avatar" />
         <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
@@ -98,7 +98,7 @@
 
 <a name="3"></a>
 <div class="nav-title">为<span class="red">{{.Uobj.Name}}</span>重设密码</div>
-<div class="main-box">
+<div class="card-body">
     <form method="post" action="" onsubmit="return form_pw_post();">
     <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
         <tbody>

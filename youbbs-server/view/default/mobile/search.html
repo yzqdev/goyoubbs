@@ -4,7 +4,7 @@
     <a href="/">{{.SiteCf.Name}}</a> &raquo; 搜索：{{.Q}} ({{len .PageInfo.Items}}/{{.SiteCf.PageShowNum}})
 </div>
 
-<div class="main-box home-box-list">
+<div class="card-body home-box-list">
 
     {{range $_, $item := .PageInfo.Items}}
     <div class="post-list">

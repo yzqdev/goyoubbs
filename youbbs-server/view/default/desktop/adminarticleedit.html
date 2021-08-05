@@ -1,7 +1,7 @@
 {{ define "content" }}
 
 <form action="" method="post" onsubmit="return form_post();">
-<div class="nav-title">
+<div class="card-header">
     <a href="/">{{.SiteCf.Name}}</a> &raquo;
     <select id="select-cid" name="select-cid">
         {{range $_, $item := .MainNodes}}
@@ -11,7 +11,7 @@
     - 编辑
 </div>
 
-<div class="main-box">
+<div class="card-body">
     <p><input id="id-title" type="text" name="title" value="{{.Aobj.Title}}" class="sll" /></p>
     <p><textarea id="id-content" name="content" class="mll tall">{{.Aobj.Content}}</textarea></p>
     <p><input id="id-tags" type="text" value="{{.Aobj.Tags}}" class="sll" /></p>

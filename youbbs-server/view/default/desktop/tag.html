@@ -1,10 +1,10 @@
 {{ define "content" }}
 
-<div class="nav-title">
+<div class="card-header">
     <a href="/">{{.SiteCf.Name}}</a> &raquo; 标签：{{.Tag.Name}} ({{.Tag.Number}})
 </div>
 
-<div class="main-box home-box-list">
+<div class="card-body home-box-list">
 
     {{range $_, $item := .PageInfo.Items}}
     <div class="post-list">

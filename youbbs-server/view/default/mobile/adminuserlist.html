@@ -8,7 +8,7 @@
     <a href="/admin/user/list?flag=99">管理员99</a> |
 </div>
 
-<div class="main-box">
+<div class="card-body">
 
     <ul style="margin-left: 30px;padding: 0;">
     {{range $_, $item := .PageInfo.Items}}
@@ -36,13 +36,13 @@
     <a href="/">{{.SiteCf.Name}}</a> &raquo; 添加用户
 </div>
 
-<div class="main-box">
+<div class="card-body">
 
     <form action="/login" method="post" onsubmit="return form_post();">
-        <p><label>登录名： <input type="text" id="name" class="sl w200" value="" /></label>  <span class="fs12">允许字母、数字、中文，不能全为数字，4~12个字节</span></p>
-        <p><label>密　码： <input type="text" id="password" class="sl w200" value="" /></label></p>
+        <p><label>登录名： <input type="text" id="name" class="form-control" value="" /></label>  <span class="fs12">允许字母、数字、中文，不能全为数字，4~12个字节</span></p>
+        <p><label>密　码： <input type="text" id="password" class="form-control" value="" /></label></p>
 
-        <p><input type="submit" value=" 添加 " id="submit" class="textbtn newpostbtn" style="margin-left:60px;" /> </p>
+        <p><input type="submit" value=" 添加 " id="submit" class="textbtn btn btn-primary" style="margin-left:60px;" /> </p>
     </form>
 
 </div>

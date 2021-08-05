@@ -4,20 +4,20 @@
     <a href="/">{{.SiteCf.Name}}</a> &raquo; {{.Title}}
 </div>
 
-<div class="main-box">
+<div class="card-body">
 
     <form action="/login" method="post" onsubmit="return form_post();">
-        <p><label>登录名： <input type="text" id="name" class="sl w200" value="" /></label> <br/>  <span class="fs12">允许字母、数字、中文，不能全为数字，4~12个字节</span></p>
-        <p><label>密　码： <input type="password" id="password" class="sl w200" value="" /></label></p>
+        <p><label>登录名： <input type="text" id="name" class="form-control" value="" /></label> <br/>  <span class="fs12">允许字母、数字、中文，不能全为数字，4~12个字节</span></p>
+        <p><label>密　码： <input type="password" id="password" class="form-control" value="" /></label></p>
 
         {{if eq .Act "register"}}
-        <p><label>重　复： <input type="password" id="password2" class="sl w200" value="" /></label></p>
+        <p><label>重　复： <input type="password" id="password2" class="form-control" value="" /></label></p>
         {{end}}
 
         <p><img id="image" onclick="reload()" style="margin-left: 30px;" src="/captcha/{{.CaptchaId}}.png" alt="Captcha image"></p>
-        <p><label>验证码： <input type="text" id="captchaSolution" class="sl w200" value="" /></label></p>
+        <p><label>验证码： <input type="text" id="captchaSolution" class="form-control" value="" /></label></p>
 
-        <p><input type="submit" value=" {{.Title}} " id="submit" class="textbtn newpostbtn" style="margin-left:60px;" /> </p>
+        <p><input type="submit" value=" {{.Title}} " id="submit" class="textbtn btn btn-primary" style="margin-left:60px;" /> </p>
         {{if eq .Act "login"}}
             {{if .SiteCf.CloseReg}}
         <p class="grey fs12">网站已停止新用户注册</p>

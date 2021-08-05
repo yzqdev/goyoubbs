@@ -2,7 +2,7 @@
 
 <a name="1"></a>
 <div class="nav-title"><a href="/">{{.SiteCf.Name}}</a> &raquo; 设置</div>
-<div class="main-box">
+<div class="card-body">
     <form method="post" action="/setting#1" onsubmit="return form_base_post();">
     <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
         <tbody><tr>
@@ -58,7 +58,7 @@
 
 <a name="2"></a>
 <div class="nav-title">设置头像</div>
-<div class="main-box">
+<div class="card-body">
     <form action="/setting#2" enctype="multipart/form-data" method="post">
     <input type="hidden" name="act" value="avatar" />
     <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
@@ -123,7 +123,7 @@
 
 <a name="3"></a>
 <div class="nav-title">更改密码</div>
-<div class="main-box">
+<div class="card-body">
     <form method="post" action="/setting#3" onsubmit="return form_pw_post();">
     <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
         <tbody>
@@ -191,7 +191,7 @@
 <!--
 <a name="3"></a>
 <div class="nav-title">设置登录密码： 你可以设置一个登录密码，以备急用</div>
-<div class="main-box">
+<div class="card-body">
     <form method="post" action="/setting#3" onsubmit="return form_pw2_post();">
     <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
         <tbody>

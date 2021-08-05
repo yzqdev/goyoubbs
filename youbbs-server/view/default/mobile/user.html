@@ -4,7 +4,7 @@
     <a href="/">{{.SiteCf.Name}}</a> &raquo; 会员：{{.Uobj.Name}}
 </div>
 
-<div class="main-box">
+<div class="card-body">
     <div class="member-avatar"><img src="/static/avatar/{{.Uobj.Avatar}}.jpg" alt="{{.Uobj.Name}}" /></div>
     <div class="member-detail">
         <p>会员：<strong>{{.Uobj.Name}}</strong> (第{{.Uobj.Id}}号会员，{{.Uobj.RegTimeFmt}}加入)
@@ -24,7 +24,7 @@
     {{.Uobj.Name}} <a href="?act=post">最近发表的帖子</a> | <a href="?act=reply">最近回复的帖子</a>
 </div>
 
-<div class="main-box home-box-list">
+<div class="card-body home-box-list">
 
     {{range $_, $item := .PageInfo.Items}}
     <div class="post-list">

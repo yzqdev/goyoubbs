@@ -1,10 +1,10 @@
 {{ define "content" }}
 
-<div class="nav-title">
+<div class="card-header">
     <a href="/">{{.SiteCf.Name}}</a> &raquo; 分类列表
 </div>
 
-<div class="main-box">
+<div class="card-body">
 
     <ul style="margin-left: 30px;padding: 0;">
     {{range $_, $item := .PageInfo.Items}}
@@ -28,17 +28,17 @@
 
 </div>
 
-<div class="nav-title">
+<div class="card-header">
     <a href="/">{{.SiteCf.Name}}</a> &raquo; {{if .Cobj.Id}}修改{{else}}添加{{end}}分类
 </div>
 
-<div class="main-box">
+<div class="card-body">
 
     <form action="" method="post" onsubmit="return form_post();">
         <p>
             <label><input type="checkbox" id="id-hidden" value="1" {{if .Cobj.Hidden}}checked="checked"{{end}} /> 隐藏</label>
         </p>
-        <p>分类名称： <input type="text" class="sl w200" id="name" value="{{.Cobj.Name}}" /><br/>
+        <p>分类名称： <input type="text" class="form-control" id="name" value="{{.Cobj.Name}}" /><br/>
             分类简介： (255个字节以内)<br/>
             <textarea class="ml w500" id="about">{{.Cobj.About}}</textarea><br/>
             <input type="submit" value=" 提交 " id="submit" class="textbtn" /></p>

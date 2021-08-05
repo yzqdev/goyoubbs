@@ -4,7 +4,7 @@
     <a href="/">{{.SiteCf.Name}}</a> &raquo; 链接列表
 </div>
 
-<div class="main-box">
+<div class="card-body">
 
     <ul style="margin-left: 30px;padding: 0;">
     {{range $_, $item := .Items}}
@@ -21,13 +21,13 @@
     <a href="/">{{.SiteCf.Name}}</a> &raquo; {{if .Lobj.Id}}修改{{else}}添加{{end}}链接
 </div>
 
-<div class="main-box">
+<div class="card-body">
 
     <form action="" method="post" onsubmit="return form_post();">
         <p>
-            文字： <input type="text" class="sl w200" id="name" value="{{.Lobj.Name}}" /><br/>
-            网址： <input type="text" class="sl w200" id="url" value="{{.Lobj.Url}}" /><br/>
-            权重： <input type="text" class="sl w200" id="score" value="{{.Lobj.Score}}" /><br/>
+            文字： <input type="text" class="form-control" id="name" value="{{.Lobj.Name}}" /><br/>
+            网址： <input type="text" class="form-control" id="url" value="{{.Lobj.Url}}" /><br/>
+            权重： <input type="text" class="form-control" id="score" value="{{.Lobj.Score}}" /><br/>
             <input type="submit" value=" 提交 " id="submit" class="textbtn" />
         </p>
     </form>

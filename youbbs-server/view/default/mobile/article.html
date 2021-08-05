@@ -5,12 +5,12 @@
         &raquo; <a href="/n/{{.Cobj.Id}}">{{.Cobj.Name}}</a> ({{.Cobj.Articles}})
     </div>
     {{if ge .CurrentUser.Flag 5}}
-    <div class="float-right"><a href="/newpost/{{.Cobj.Id}}" rel="nofollow" class="newpostbtn">+发新帖</a></div>
+    <div class="float-right"><a href="/newpost/{{.Cobj.Id}}" rel="nofollow" class="btn btn-primary">+发新帖</a></div>
     {{end}}
     <div class="c"></div>
 </div>
 
-<div class="main-box">
+<div class="card-body">
     <div class="topic-title">
         <div class="topic-title-main float-left">
             <h1>{{.Aobj.Title}}</h1>
@@ -69,7 +69,7 @@
 <div class="nav-title">
     共 {{.Aobj.Comments}} 条回复
 </div>
-<div class="main-box home-box-list">
+<div class="card-body home-box-list">
 
     {{range $_, $item := .PageInfo.Items}}
     <a name="{{$item.Id}}"></a>
@@ -149,7 +149,7 @@
     <div class="float-right"><a href="#">↑ 回到顶部</a></div>
     <div class="c"></div>
 </div>
-<div class="main-box">
+<div class="card-body">
     <form action="#new-comment" method="POST" enctype="multipart/form-data">
         <p><textarea id="id-content" name="content" class="comment-text mll wb96"></textarea></p>
         <div class="c"></div>

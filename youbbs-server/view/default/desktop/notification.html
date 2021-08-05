@@ -1,13 +1,13 @@
 {{ define "content" }}
 
-<div class="nav-title">
+<div class="card-header">
     <div class="float-left fs14">
         <a href="/">{{.SiteCf.Name}}</a> &raquo; 站内提醒  （ 有人在下面的文章回复或提起了你 ）
     </div>
     <div class="c"></div>
 </div>
 
-<div class="main-box home-box-list">
+<div class="card-body home-box-list">
 
     {{range $_, $item := .PageInfo.Items}}
     <div class="post-list">

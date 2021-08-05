@@ -1,11 +1,11 @@
 {{ define "content" }}
 
 <form action="" method="post" onsubmit="return form_post();">
-<div class="nav-title">
+<div class="card-header">
     <a href="/">{{.SiteCf.Name}}</a> &raquo; - 编辑评论
 </div>
 
-<div class="main-box">
+<div class="card-body">
     <p><textarea id="id-content" name="content" class="mll tall">{{.Cobj.Content}}</textarea></p>
 
     <div class="float-right grey fs12">
