@@ -134,7 +134,7 @@ func (h *BaseHandler) AdminUserListPost(w http.ResponseWriter, r *http.Request) 
 	}
 
 	uidStr := strconv.FormatUint(userId, 10)
-	err = util.GenerateAvatar("male", rec.Name, 73, 73, "static/avatar/"+uidStr+".jpg")
+	err = util.GenerateAvatar("male", rec.Name, 73, 73, GetAppHome("/avatar/")+uidStr+".jpg")
 	if err != nil {
 		uobj.Avatar = "0"
 	} else {

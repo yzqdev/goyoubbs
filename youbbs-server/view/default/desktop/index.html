@@ -19,7 +19,7 @@
             <img src="/static/avatar/{{$item.Avatar}}.jpg" alt="{{$item.Name}}" />
             </a></div>
         <div class="item-content">
-            <h1><a href="/topic/{{$item.Id}}">{{$item.Title}}</a></h1>
+            <article><a href="/topic/{{$item.Id}}">{{$item.Title}}</a></article>
             <span class="item-date"><a href="/n/{{$item.Cid}}">{{$item.Cname}}</a>  •  <a href="/member/{{$item.Uid}}">{{$item.Name}}</a>
                 • {{$item.EditTimeFmt}}
                 {{if $item.Comments}}
@@ -30,7 +30,7 @@
         {{if $item.Comments}}
         <div class="item-count"><a href="/topic/{{$item.Id}}#reply{{$item.Comments}}">{{$item.Comments}}</a></div>
         {{end}}
-        <div class="c"></div>
+
     </div>
 
     {{end}}
@@ -43,7 +43,7 @@
         {{if .PageInfo.HasNext}}
         <a href="/?btn=next&key={{.PageInfo.LastKey}}&score={{.PageInfo.LastScore}}" class="float-right">下一页 &raquo;</a>
         {{end}}
-        <div class="c"></div>
+
     </div>
 
 </div>

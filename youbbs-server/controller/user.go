@@ -108,6 +108,7 @@ func (h *BaseHandler) UserLoginPost(w http.ResponseWriter, r *http.Request) {
 			//w.Write([]byte(`{"retcode":400,"retmsg":"name and pw not match"}`))
 			//return
 		}
+		color.Redln(GetAppHome("/avatar/"))
 		color.Redln("根据用户名获取用户")
 		color.Redln(db)
 		uobj, err := model.UserGetByName(db, nameLow)
@@ -163,7 +164,8 @@ func (h *BaseHandler) UserLoginPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		uidStr := strconv.FormatUint(userId, 10)
-		err = util.GenerateAvatar("male", rec.Name, 73, 73, "static/avatar/"+uidStr+".jpg")
+
+		err = util.GenerateAvatar("male", rec.Name, 73, 73, GetAppHome("/avatar/")+uidStr+".jpg")
 		if err != nil {
 			uobj.Avatar = "0"
 		} else {

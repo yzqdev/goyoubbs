@@ -1,0 +1,24 @@
+{
+  "name": "youbbs",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^1.3.0",
+    "axios": "^0.21.1",
+    "element-plus": "^1.0.2-beta.69",
+    "less": "^4.1.1",
+    "prettier": "^2.3.2",
+    "vue": "^3.1.4",
+    "vue-router": "^4.0.10",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.1.5",
+    "dayjs": "^1.10.6",
+    "vite": "^2.4.4"
+  }
+}

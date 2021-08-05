@@ -124,7 +124,7 @@ func (h *BaseHandler) UserEditPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = util.AvatarResize(img, 73, 73, "static/avatar/"+uid+".jpg")
+		err = util.AvatarResize(img, 73, 73, GetAppHome("/avatar/")+uid+".jpg")
 		if err != nil {
 			w.Write([]byte(`{"retcode":400,"retmsg":"fail to resize avatar ` + err.Error() + `"}`))
 			return

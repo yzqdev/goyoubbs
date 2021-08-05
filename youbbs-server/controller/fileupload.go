@@ -94,7 +94,7 @@ func (h *BaseHandler) FileUpload(w http.ResponseWriter, r *http.Request) {
 
 	hash := md5.Sum(fileData.Bytes())
 	fileMd5 := hex.EncodeToString(hash[:])
-	savePath := "static/upload/" + fileMd5 + "." + fileEx
+	savePath := GetAppHome("/upload/") + fileMd5 + "." + fileEx
 
 	//
 	var dstImg *image.NRGBA
