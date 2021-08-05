@@ -28,8 +28,8 @@ func NewRouter(app *system.Application) *goji.Mux {
 	sp.HandleFunc(pat.Get("/logout"), h.UserLogout)
 	sp.HandleFunc(pat.Get("/notification"), h.UserNotification)
 
-	sp.HandleFunc(pat.Get("/t/:aid"), h.ArticleDetail)
-	sp.HandleFunc(pat.Post("/t/:aid"), h.ArticleDetailPost)
+	sp.HandleFunc(pat.Get("/topic/:aid"), h.ArticleDetail)
+	sp.HandleFunc(pat.Post("/topic/:aid"), h.ArticleDetailPost)
 
 	sp.HandleFunc(pat.Get("/setting"), h.UserSetting)
 	sp.HandleFunc(pat.Post("/setting"), h.UserSettingPost)

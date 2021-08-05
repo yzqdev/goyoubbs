@@ -47,11 +47,11 @@ func ContentFmt(db *youdb.DB, mdm, input string) string {
 		var keys [][]byte // hrefMD5 lst
 
 		md = aTagRegexp.ReplaceAllStringFunc(md, func(m string) string {
-			// 如果为 mdm 或 /t/* 则去掉 rel="nofollow
+			// 如果为 mdm 或 /topic/* 则去掉 rel="nofollow
 			href := hrefRegexp.FindString(m)
 			if len(href) > 7 {
 				hrefValue := href[6 : len(href)-1]
-				if strings.HasPrefix(hrefValue, mdm) || strings.HasPrefix(hrefValue, "/t/") || strings.HasPrefix(hrefValue, "#") {
+				if strings.HasPrefix(hrefValue, mdm) || strings.HasPrefix(hrefValue, "/topic/") || strings.HasPrefix(hrefValue, "#") {
 					m = strings.Replace(m, ` rel="nofollow"`, "", 1)
 				} else {
 					if !strings.HasPrefix(hrefValue, "/member") {

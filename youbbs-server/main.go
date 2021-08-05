@@ -171,7 +171,7 @@ func main() {
 		srv.RegisterOnShutdown(cancel)
 
 		go func() {
-			// 如何获取 TLSCrtFile、TLSKeyFile 文件参见 https://www.youbbs.org/t/2169
+			// 如何获取 TLSCrtFile、TLSKeyFile 文件参见 https://www.youbbs.org/topic/2169
 			if err := srv.ListenAndServeTLS(mcf.TLSCrtFile, mcf.TLSKeyFile); err != http.ErrServerClosed {
 				// it is fine to use Fatal here because it is not main gorutine
 				log.Fatalf("HTTPS server ListenAndServe: %v", err)

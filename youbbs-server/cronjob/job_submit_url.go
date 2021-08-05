@@ -63,7 +63,7 @@ func submitUrl(db *youdb.DB, scf *system.SiteConf) {
 		return
 	}
 
-	aUrl := scf.MainDomain + "/t/" + strconv.FormatUint(youdb.B2i(curKey), 10)
+	aUrl := scf.MainDomain + "/topic/" + strconv.FormatUint(youdb.B2i(curKey), 10)
 
 	hasSubmit := map[string]bool{}
 

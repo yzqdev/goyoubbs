@@ -1,9 +1,9 @@
 {{ define "content" }}
 
-<form action="" method="post" onsubmit="return form_post();">
+
 <div class="card-header">
     <a href="/">{{.SiteCf.Name}}</a> &raquo;
-    <select id="select-cid" name="select-cid">
+    <select id="select-cid" class="form-control" name="select-cid">
         {{range $_, $item := .MainNodes}}
     <option value="{{$item.Id}}" {{if eq $item.Id $.Cobj.Id}}selected="selected"{{end}}>{{$item.Name}}</option>
         {{end}}
@@ -12,29 +12,34 @@
 </div>
 
 <div class="card-body">
-    <p><input id="id-title" type="text" name="title" value="" class="sll" /></p>
-    <p><textarea id="id-content" name="content" class="mll tall"></textarea></p>
+    <form action="" method="post" onsubmit="return form_post();">
+    <div class="mb-3">
+        <label for="id-title" class="form-label">标题</label>
+        <input id="id-title" type="text"  name="title" value="" placeholder="请输入标题" class="form-control" />
+    </div>
+     <textarea id="id-content" name="content" placeholder="请输入内容" class="form-control"></textarea>
 
     <div class="float-right grey fs12">
-        <input id="file_upload" name="file_upload" type="file" multiple="true">
+        <input id="file_upload" class="form-control" name="file_upload" type="file" multiple="true">
         <div id="file-queue"></div>
         <div class="c"></div>
     </div>
     <div class="c"></div>
 
-    <p><div class="float-left">
+     <div class="float-left">
         <input id="btn-preview" type="button" value=" 预 览 " name="submit" class="btn btn-outline-primary" />
         <input id="btn-submit" type="submit" value=" 发 表 " name="submit" class="btn btn-outline-primary" />
-    </div><div class="c"></div></p>
+    </div><div class="c"></div>
 
     <div class="topic-content">
         <div id="id_preview" class="markdown-body"></div>
     </div>
 
-</div>
-</form>
+    </form></div>
+
 
 <script>
+
     $("#btn-preview").on("click", function(){
         var content = $("#id-content").val();
         if(content){
@@ -48,10 +53,13 @@
                 success: function(data){
                     if(data.retcode==200) {
                         $("#id_preview").html(data.html);
-                        $("#id_preview").addClass("previews");
-                        $("#id_preview pre code").each(function (i, block) {
-                            hljs.highlightBlock(block);
+                        var quill = new Quill('#id_preview', {
+                            theme: 'snow'
                         });
+                        // $("#id_preview").addClass("previews");
+                        // $("#id_preview pre code").each(function (i, block) {
+                        //     hljs.highlightBlock(block);
+                        // });
                     }else{
                         $.toast(data.retmsg)
                     }
@@ -82,7 +90,7 @@
                 contentType: "application/json",
                 success: function(data){
                     if(data.retcode == 200){
-                        window.location.href = "/t/"+data.aid;
+                        window.location.href = "/topic/"+data.aid;
                         return
                     }
                     $.toast(data.retmsg);

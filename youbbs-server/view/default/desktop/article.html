@@ -34,7 +34,7 @@
     </div>
     <div class="topic-content">
 
-        <div class="markdown-body">
+        <div class="markdown-body" id="mainMark">
             {{.Aobj.ContentFmt}}
         </div>
 
@@ -52,7 +52,7 @@
             <h3>相关帖子：</h3>
             <ul class="rel_list">
                 {{range $_, $item := .Relative.Articles}}
-                <li><a href="/t/{{$item.Id}}" title="{{$item.Title}}">{{$item.Title}}</a></li>
+                <li><a href="/topic/{{$item.Id}}" title="{{$item.Title}}">{{$item.Title}}</a></li>
                 {{end}}
 
                 <div class="c"></div>
@@ -115,10 +115,10 @@
 
     <div class="pagination">
         {{if .PageInfo.HasPrev}}
-        <a href="/t/{{.Aobj.Id}}?btn=prev&key={{.PageInfo.FirstKey}}" class="float-left">&laquo; 上一页</a>
+        <a href="/topic/{{.Aobj.Id}}?btn=prev&key={{.PageInfo.FirstKey}}" class="float-left">&laquo; 上一页</a>
         {{end}}
         {{if .PageInfo.HasNext}}
-        <a href="/t/{{.Aobj.Id}}?btn=next&key={{.PageInfo.LastKey}}" class="float-right">下一页 &raquo;</a>
+        <a href="/topic/{{.Aobj.Id}}?btn=next&key={{.PageInfo.LastKey}}" class="float-right">下一页 &raquo;</a>
         {{end}}
         <div class="c"></div>
     </div>
@@ -163,7 +163,7 @@
         </div>
         <div class="c"></div>
 
-        <p>
+
             <div class="float-left">
                 <input id="btn-preview" type="button" value=" 预 览 " name="submit" class="btn btn-outline-primary" />
                 <input id="btn-submit" type="submit" value=" 提 交 " name="submit" class="btn btn-outline-primary" />
@@ -171,7 +171,7 @@
             <div class="float-right fs12 grey">
                 • 请尽量让自己的回复能够对别人有帮助！</div>
             <div class="c"></div>
-        </p>
+
     </form>
 
     <div class="commont-content">
@@ -181,6 +181,10 @@
 </div>
 </div>
 <script>
+
+   let mark=document.getElementById("mainMark")
+   mark.innerHTML=marked(mark.innerHTML)
+
     jQuery(function($){
         $("#btn-preview").click(function(){
             var content = $("#id-content").val();
@@ -217,7 +221,7 @@
                 $(this).attr("disabled", true);
                 $.ajax({
                     type: "POST",
-                    url: "/t/{{.Aobj.Id}}",
+                    url: "/topic/{{.Aobj.Id}}",
                     data: JSON.stringify({"act": "comment_submit", "content": content}),
                     dataType: "json",
                     contentType: "application/json",
@@ -331,7 +335,7 @@
         if(link.indexOf("/member/") !== 0) {
             $.ajax({
                 type: "POST",
-                url: "/t/{{.Aobj.Id}}",
+                url: "/topic/{{.Aobj.Id}}",
                 data: JSON.stringify({"act": "link_click", "link": link}),
                 dataType: "json",
                 success: function(data){

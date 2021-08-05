@@ -6,27 +6,21 @@
 
     <div class="card-body">
         <form method="post" action="" onsubmit="return form_flag_post();">
-        <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-            <tbody>
-            <tr>
-                <td width="120" align="right">设置权限</td>
-                <td width="auto" align="left"><input type="text" class="sl w100" id="flag" value="{{.Uobj.Flag}}" /> 输入数字:0~99</td>
-            </tr>
-            <tr>
-                <td width="120" align="right">权限说明</td>
-                <td width="auto" align="left">
+            <div class="mb-3">
+                <label class="form-label">设置权限</label>
+                <input type="text" class="form-control" id="flag" value="{{.Uobj.Flag}}" /> 输入数字:0~99
+            </div>
+            <section>
+                <article>权限说明</article>
+                <article>
                     0: 禁用，不能发帖子、回复；<br/>
                     1: 等待审核，当开启注册用户审核才有效；<br/>
                     5: 一般用户，可发帖子、回复；<br/>
                     99： 管理员。
-                </td>
-            </tr>
-            <tr>
-                <td width="120" align="right"></td>
-                <td width="auto" align="left"><input type="submit" value="保存设置" name="submit" class="btn btn-outline-primary" /></td>
-            </tr>
+                </article>
+            </section>
+            <input type="submit" value="保存设置" name="submit" class="btn btn-outline-primary" />
 
-            </tbody></table>
 </form>
 
 </div>
@@ -35,35 +29,35 @@
 <div class="card-header">基本资料 <span class="red">{{.Uobj.Name}}</span></div>
 <div class="card-body">
     <form method="post" action="" onsubmit="return form_base_post();">
-    <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-        <tbody>
-        <tr>
-            <td width="120" align="right">隐藏用户</td>
-            <td width="auto" align="left">
+        <div>
+
+            <div class="mb-3">
+                <label class="form-label">隐藏用户</label>
+
                 <label><input type="checkbox" id="id-hidden" value="1" {{if .Uobj.Hidden}}checked="checked"{{end}} /> 隐藏</label>
-            </td>
-        </tr>
-        <tr>
-            <td width="120" align="right">登录名</td>
-            <td width="auto" align="left"><input type="text" class="sl" id="name" value="{{.Uobj.Name}}" /> 一般不要修改</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">电子邮件</td>
-            <td width="auto" align="left"><input type="text" class="sl" id="email" value="{{.Uobj.Email}}" /> 不公开，仅供取回密码</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">个人网站</td>
-            <td width="auto" align="left"><input type="text" class="sl" id="url" value="{{.Uobj.Url}}" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right">个人简介</td>
-            <td width="auto" align="left"><textarea class="ml" id="about">{{.Uobj.About}}</textarea></td>
-        </tr>
-        <tr>
-            <td width="120" align="right"></td>
-            <td width="auto" align="left"><input type="submit" value="保存设置" name="submit" class="btn btn-outline-primary" /></td>
-        </tr>
-        </tbody></table>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">登录名</label>
+                <input type="text" class="form-control" id="name" value="{{.Uobj.Name}}" /> <br/>一般不要修改
+            </div>
+            <div class="mb-3">
+                <label class="form-label">电子邮件</label>
+                <input type="text" class="form-control" id="email" value="{{.Uobj.Email}}" /> <br/>不公开，仅供取回密码
+            </div>
+            <div class="mb-3">
+                <label class="form-label">个人网站</label>
+                <input type="text" class="form-control" id="url" value="{{.Uobj.Url}}" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">个人简介</label>
+                <textarea class="form-control" id="about">{{.Uobj.About}}</textarea>
+            </div>
+            <div class="mb-3">
+
+                <input type="submit" value="保存设置" name="submit" class="btn btn-outline-primary" />
+            </div>
+        </div>
     </form>
 
 </div>
@@ -74,23 +68,18 @@
     <form action="" enctype="multipart/form-data" method="post">
         <input type="hidden" name="act" value="avatar" />
         <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
-        <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-            <tbody><tr>
-                <td width="120" align="right">当前头像</td>
-                <td width="auto" align="left">
+        <label class="form-label">当前头像</label>
+                <article>
                     <img id="av24" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar24" border="0" align="default" auto=""> &nbsp;
                     <img id="av48" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar48" border="0" align="default" auto=""> &nbsp;
                     <img id="av73" src="/static/avatar/{{.Uobj.Avatar}}.jpg?t={{.Now}}" class="avatar avatar73" border="0" align="default" auto="">
-                </td>
-            </tr>
-            <tr>
-                <td width="120" align="right">选择头像图片</td>
-                <td width="auto" align="left"><input id="avatar" name="avatar" accept="image/*" type="file" /> (最大300K)</td>
-            </tr>
-            <tr>
-                <td width="120" align="right"></td>
-                <td width="auto" align="left"><input id="avatar_submit" type="submit" value="更新头像" name="submit" class="btn btn-outline-primary" /></td>
-            </tr>
+                </article>>
+        <label class="form-label">选择头像图片</label>
+                 <input id="avatar" name="avatar" accept="image/*" type="file" /> (最大300K)
+
+
+                 <input id="avatar_submit" type="submit" value="更新头像" name="submit" class="btn btn-outline-primary" />
+
 
             </tbody></table>
     </form>
@@ -100,21 +89,19 @@
 <div class="card-header">为<span class="red">{{.Uobj.Name}}</span>重设密码</div>
 <div class="card-body">
     <form method="post" action="" onsubmit="return form_pw_post();">
-    <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-        <tbody>
-        <tr>
-            <td width="120" align="right">新密码</td>
-            <td width="auto" align="left"><input type="text" class="sl" id="password" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right">再次输入新密码</td>
-            <td width="auto" align="left"><input type="text" class="sl" id="password2" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right"></td>
-            <td width="auto" align="left"><input type="submit" value="重设密码" name="submit" class="btn btn-outline-primary" /></td>
-        </tr>
-        </tbody></table>
+        <div class="mb-3">
+            <label for="password0" class="form-label">当前密码</label>
+            <input type="password" class="form-control" id="password0" placeholder=" ">
+        </div><div class="mb-3">
+        <label for="password" class="form-label">新密码</label>
+        <input type="password" class="form-control" id="password" placeholder=" ">
+    </div><div class="mb-3">
+        <label for="password2" class="form-label">再次输入新密码</label>
+        <input type="password" class="form-control" id="password2" placeholder="">
+    </div>
+
+
+        <input type="submit" value="更改密码" name="submit" class="btn btn-outline-primary" />
     </form>
 </div>
 

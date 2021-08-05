@@ -63,7 +63,7 @@ func (h *BaseHandler) SiteMapHandler(w http.ResponseWriter, r *http.Request) {
 			tt++
 			if tt <= maxUrlInSitemap {
 				lastmod := util.TimeFmt(youdb.B2i(value.Bytes()), "2006-01-02", h.App.Cf.Site.TimeZone)
-				buf.WriteString("<url>\n<loc>" + h.App.Cf.Site.MainDomain + "/t/" + strconv.FormatUint(youdb.B2i(key.Bytes()), 10) + "</loc>\n<lastmod>" + lastmod + "</lastmod>\n</url>\n")
+				buf.WriteString("<url>\n<loc>" + h.App.Cf.Site.MainDomain + "/topic/" + strconv.FormatUint(youdb.B2i(key.Bytes()), 10) + "</loc>\n<lastmod>" + lastmod + "</lastmod>\n</url>\n")
 			}
 		})
 		if tt >= maxUrlInSitemap {

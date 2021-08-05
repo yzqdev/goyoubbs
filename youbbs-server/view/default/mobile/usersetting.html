@@ -4,29 +4,23 @@
 <div class="nav-title"><a href="/">{{.SiteCf.Name}}</a> &raquo; 设置</div>
 <div class="card-body">
     <form method="post" action="/setting#1" onsubmit="return form_base_post();">
-    <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-        <tbody><tr>
-            <td width="120" align="right">用户名</td>
-            <td width="auto" align="left">{{.Uobj.Name}}</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">电子邮件</td>
-            <td width="auto" align="left"><input type="text" class="sl wb80" id="email" value="{{.Uobj.Email}}" /> <br/>不公开，仅供取回密码，务必正确填写且记住。</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">个人网站</td>
-            <td width="auto" align="left"><input type="text" class="sl wb80" id="url" value="{{.Uobj.Url}}" /> http://...</td>
-        </tr>
-        <tr>
-            <td width="120" align="right">个人简介</td>
-            <td width="auto" align="left"><textarea class="ml wb80" id="about">{{.Uobj.About}}</textarea></td>
-        </tr>
-        <tr>
-            <td width="120" align="right"></td>
-            <td width="auto" align="left"><input type="submit" value="保存设置" name="submit" class="btn btn-outline-primary" /></td>
-        </tr>
+        <div class="mb-3">
+            <label for="username" class="form-label">用户名</label>
+            <input type="text" class="form-control" value="{{.Uobj.Name}}" id="username" placeholder="name@example.com">
+        </div>  <div class="mb-3">
+        <label for="email" class="form-label">邮箱</label>
+        <input type="text" class="form-control" value="{{.Uobj.Email}}" id="email" placeholder="name@example.com">不公开，仅供取回密码，务必正确填写且记住
+    </div>
+        <div class="mb-3">
+            <label for="personsite" class="form-label">用户名</label>
+            <input type="text" class="form-control" value="{{.Uobj.Name}}" id="personsite" placeholder="name@example.com">
+        </div> <div class="mb-3">
+        <label for="about" class="form-label">个人简介</label>
+        <input type="text" class="form-control" value="{{.Uobj.About}}" id="about" placeholder="name@example.com">
 
-        </tbody></table>
+
+    </div>
+        <input type="submit" value="保存设置" name="submit" class="btn btn-outline-primary" />
     </form>
 
 </div>
@@ -125,26 +119,19 @@
 <div class="nav-title">更改密码</div>
 <div class="card-body">
     <form method="post" action="/setting#3" onsubmit="return form_pw_post();">
-    <table cellpadding="5" cellspacing="8" border="0" width="100%" class="fs12">
-        <tbody>
-        <tr>
-            <td width="120" align="right">当前密码</td>
-            <td width="auto" align="left"><input type="password" class="sl wb80" id="password0" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right">新密码</td>
-            <td width="auto" align="left"><input type="password" class="sl wb80" id="password" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right">再次输入新密码</td>
-            <td width="auto" align="left"><input type="password" class="sl wb80" id="password2" value="" /></td>
-        </tr>
-        <tr>
-            <td width="120" align="right"></td>
-            <td width="auto" align="left"><input type="submit" value="更改密码" name="submit" class="btn btn-outline-primary" /></td>
-        </tr>
+        <div class="mb-3">
+            <label for="password0" class="form-label">当前密码</label>
+            <input type="password" class="form-control" id="password0" placeholder=" ">
+        </div><div class="mb-3">
+        <label for="password" class="form-label">新密码</label>
+        <input type="password" class="form-control" id="password" placeholder=" ">
+    </div><div class="mb-3">
+        <label for="password2" class="form-label">再次输入新密码</label>
+        <input type="password" class="form-control" id="password2" placeholder="">
+    </div>
 
-        </tbody></table>
+
+        <input type="submit" value="更改密码" name="submit" class="btn btn-outline-primary" />
     </form>
 
 </div>

@@ -1,9 +1,9 @@
 {{ define "content" }}
 
-<form action="" method="post" onsubmit="return form_post();">
+
 <div class="card-header">
     <a href="/">{{.SiteCf.Name}}</a> &raquo;
-    <select id="select-cid" name="select-cid">
+    <select class="form-control" id="select-cid" name="select-cid">
         {{range $_, $item := .MainNodes}}
     <option value="{{$item.Id}}" {{if eq $item.Id $.Cobj.Id}}selected="selected"{{end}}>{{$item.Name}}</option>
         {{end}}
@@ -12,9 +12,12 @@
 </div>
 
 <div class="card-body">
-    <p><input id="id-title" type="text" name="title" value="{{.Aobj.Title}}" class="sll" /></p>
-    <p><textarea id="id-content" name="content" class="mll tall">{{.Aobj.Content}}</textarea></p>
-    <p><input id="id-tags" type="text" value="{{.Aobj.Tags}}" class="sll" /></p>
+    <form action="" method="post" onsubmit="return form_post();">
+    <div class="mb-3">
+        <label for="id-title" class="form-label" >标题</label>
+        <input id="id-title" type="text" name="title" value="{{.Aobj.Title}}" class="form-control" /></div>
+    <div class="mb-3"><label for="id-content" class="form-label">内容</label><textarea id="id-content" name="content" class="form-control">{{.Aobj.Content}}</textarea></div>
+    <div class="mb-3"><label for="id-tags" class="form-label">标签</label> <input id="id-tags" type="text" value="{{.Aobj.Tags}}" class="form-control" /></div>
 
     <div class="float-right grey fs12">
         <input id="file_upload" name="file_upload" type="file" multiple="true">
@@ -38,9 +41,9 @@
     <div class="topic-content">
         <div id="id_preview" class="markdown-body"></div>
     </div>
-
+    </form>
 </div>
-</form>
+
 
 <script>
     $("#btn-preview").on("click", function(){
@@ -91,7 +94,7 @@
                 contentType: "application/json",
                 success: function(data){
                     if(data.retcode == 200){
-                        window.location.href = "/t/"+data.aid;
+                        window.location.href = "/topic/"+data.aid;
                         return
                     }
                     $.toast(data.retmsg);

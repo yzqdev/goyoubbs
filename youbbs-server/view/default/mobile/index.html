@@ -19,7 +19,7 @@
             <img src="/static/avatar/{{$item.Avatar}}.jpg" alt="{{$item.Name}}" />
             </a></div>
         <div class="item-content">
-            <h1><a href="/t/{{$item.Id}}">{{$item.Title}}</a></h1>
+            <h1><a href="/topic/{{$item.Id}}">{{$item.Title}}</a></h1>
             <span class="item-date">
                 <a href="/n/{{$item.Cid}}">{{$item.Cname}}</a>
                 • {{$item.EditTimeFmt}}
@@ -31,7 +31,7 @@
             </span>
         </div>
         {{if $item.Comments}}
-        <div class="item-count"><a href="/t/{{$item.Id}}#reply{{$item.Comments}}">{{$item.Comments}}</a></div>
+        <div class="item-count"><a href="/topic/{{$item.Id}}#reply{{$item.Comments}}">{{$item.Comments}}</a></div>
         {{end}}
         <div class="c"></div>
     </div>
