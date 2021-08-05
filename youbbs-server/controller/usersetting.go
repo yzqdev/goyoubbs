@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/gookit/color"
 	"github.com/rs/xid"
 	"goyoubbs/model"
 	"goyoubbs/util"
@@ -78,6 +79,7 @@ func (h *BaseHandler) UserSettingPost(w http.ResponseWriter, r *http.Request) {
 
 		var imgData bytes.Buffer
 		file.Seek(0, 0)
+
 		if fileSize, err := io.Copy(&imgData, file); err != nil {
 			w.Write([]byte(`{"retcode":400,"retmsg":"read image data err ` + err.Error() + `"}`))
 			return
@@ -95,7 +97,8 @@ func (h *BaseHandler) UserSettingPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		uid := strconv.FormatUint(currentUser.Id, 10)
-		err = util.AvatarResize(img, 73, 73, "static/avatar/"+uid+".jpg")
+		color.Redln(GetAppHome("/avatar/"))
+		err = util.AvatarResize(img, 73, 73, GetAppHome("/avatar/")+uid+".jpg")
 		if err != nil {
 			w.Write([]byte(`{"retcode":400,"retmsg":"fail to resize avatar ` + err.Error() + `"}`))
 			return

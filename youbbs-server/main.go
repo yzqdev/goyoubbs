@@ -8,6 +8,7 @@ import (
 	"github.com/xi2/httpgzip"
 	"golang.org/x/crypto/acme/autocert"
 	"golang.org/x/net/http2"
+	"goyoubbs/controller"
 	"goyoubbs/cronjob"
 	"goyoubbs/goji"
 	"goyoubbs/goji/pat"
@@ -111,6 +112,8 @@ func main() {
 
 	root.Handle(pat.New("/.well-known/acme-challenge/*"),
 		http.StripPrefix("/.well-known/acme-challenge/", http.FileServer(http.Dir(staticPath))))
+	root.Handle(pat.New(controller.GetAppHome("/*")),
+		http.StripPrefix(controller.GetAppHome("/"), http.FileServer(http.Dir(staticPath))))
 	root.Handle(pat.New("/static/*"),
 		http.StripPrefix("/static/", http.FileServer(http.Dir(staticPath))))
 
