@@ -334,8 +334,8 @@ func (h *BaseHandler) ArticleHomeList(w http.ResponseWriter, r *http.Request) {
 		}
 		// link
 		model.LinkSet(db, model.Link{
-			Name:  "youBBS",
-			Url:   "https://www.youbbs.org",
+			Name:  "百度",
+			Url:   "https://www.baidu.com",
 			Score: 100,
 		})
 	}
