@@ -59,6 +59,7 @@ func UserUpdate(db *youdb.DB, obj User) error {
 
 func UserGetByName(db *youdb.DB, name string) (User, error) {
 	obj := User{}
+
 	rs := db.Hget("user_name2uid", []byte(name))
 	if rs.State == "ok" {
 		rs2 := db.Hget("user", rs.Data[0])

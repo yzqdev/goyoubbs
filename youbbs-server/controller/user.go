@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"github.com/dchest/captcha"
+	"github.com/gookit/color"
 	"github.com/rs/xid"
 	"goyoubbs/goji/pat"
 	"goyoubbs/model"
@@ -39,7 +40,7 @@ func (h *BaseHandler) UserLogin(w http.ResponseWriter, r *http.Request) {
 	evn.PageName = "user_login_register"
 
 	evn.Act = act
-	evn.CaptchaId = captcha.New()
+	evn.CaptchaId = captcha.NewLen(2)
 
 	token := h.GetCookie(r, "token")
 	if len(token) == 0 {
@@ -92,7 +93,7 @@ func (h *BaseHandler) UserLoginPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !captcha.VerifyString(rec.CaptchaId, rec.CaptchaSolution) {
-		w.Write([]byte(`{"retcode":405,"retmsg":"验证码错误","newCaptchaId":"` + captcha.New() + `"}`))
+		w.Write([]byte(`{"retcode":405,"retmsg":"验证码错误","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
 		return
 	}
 
@@ -107,14 +108,16 @@ func (h *BaseHandler) UserLoginPost(w http.ResponseWriter, r *http.Request) {
 			//w.Write([]byte(`{"retcode":400,"retmsg":"name and pw not match"}`))
 			//return
 		}
+		color.Redln("根据用户名获取用户")
+		color.Redln(db)
 		uobj, err := model.UserGetByName(db, nameLow)
 		if err != nil {
-			w.Write([]byte(`{"retcode":405,"retmsg":"json Decode err:` + err.Error() + `","newCaptchaId":"` + captcha.New() + `"}`))
+			w.Write([]byte(`{"retcode":405,"retmsg":"json Decode err:` + err.Error() + `","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
 			return
 		}
 		if uobj.Password != rec.Password {
 			db.Zset(bn, key, uint64(time.Now().UTC().Unix()))
-			w.Write([]byte(`{"retcode":405,"retmsg":"name and pw not match","newCaptchaId":"` + captcha.New() + `"}`))
+			w.Write([]byte(`{"retcode":405,"retmsg":"name and pw not match","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
 			return
 		}
 		sessionid := xid.New().String()
@@ -135,7 +138,7 @@ func (h *BaseHandler) UserLoginPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if db.Hget("user_name2uid", []byte(nameLow)).State == "ok" {
-			w.Write([]byte(`{"retcode":405,"retmsg":"name is exist","newCaptchaId":"` + captcha.New() + `"}`))
+			w.Write([]byte(`{"retcode":405,"retmsg":"name is exist","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
 			return
 		}
 

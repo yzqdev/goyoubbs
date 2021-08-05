@@ -63,9 +63,6 @@ func Open(path string) (*DB, error) {
 }
 
 // Close closes the embedded bolt.DB.
-func (db *DB) Close() error {
-	return db.DB.Close()
-}
 
 // Hset set the byte value in argument as value of the key of a hashmap.
 func (db *DB) Hset(name string, key, val []byte) error {

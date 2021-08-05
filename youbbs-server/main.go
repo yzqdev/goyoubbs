@@ -168,7 +168,7 @@ func main() {
 		defer os.Exit(1)
 		return
 	} else {
-		app.Close() // !important 留意上下文位置
+		app.Db.Close() // !important 留意上下文位置
 		log.Printf("gracefully stopped\n")
 	}
 

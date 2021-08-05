@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/disintegration/imaging v1.6.2
+	github.com/gookit/color v1.4.2
 	github.com/gorilla/securecookie v1.1.1
 	github.com/h2non/filetype v1.1.1
 	github.com/klauspost/compress v1.13.1 // indirect

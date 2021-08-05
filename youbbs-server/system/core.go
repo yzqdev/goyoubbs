@@ -2,15 +2,15 @@ package system
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
-	"log"
-	"runtime"
-
+	"github.com/gookit/color"
 	"github.com/gorilla/securecookie"
 	"github.com/qiniu/api.v7/storage"
+	"github.com/spf13/viper"
 	"goyoubbs/util"
 	"goyoubbs/youdb"
+	"log"
 	"net/url"
+	"runtime"
 	"strings"
 )
 
@@ -138,12 +138,14 @@ func (app *Application) Init(c *viper.Viper, currentFilePath string) {
 	scf.UploadMaxSizeByte = int64(scf.UploadMaxSize) << 20
 
 	app.Cf = &AppConf{mcf, scf}
+	color.Redln("打开数据库")
 	db, err := youdb.Open(mcf.Youdb)
 	if err != nil {
 		log.Fatalf("Connect Error: %v", err)
 	}
 	app.Db = db
-	defer app.Db.Close()
+
+	defer db.Close()
 	// set main node
 	db.Hset("keyValue", []byte("main_category"), []byte(scf.MainNodeIds))
 
@@ -166,10 +168,4 @@ func (app *Application) Init(c *viper.Viper, currentFilePath string) {
 	app.Sc = securecookie.New(hashKey, blockKey)
 	//app.Sc.SetSerializer(securecookie.JSONEncoder{})
 
-	log.Println("youdb Connect to", mcf.Youdb)
-}
-
-func (app *Application) Close() {
-	app.Db.Close()
-	log.Println("db cloded")
 }
