@@ -2,16 +2,10 @@ package system
 
 import (
 	"fmt"
-	"github.com/gookit/color"
 	"github.com/gorilla/securecookie"
 	"github.com/qiniu/api.v7/storage"
 	"github.com/spf13/viper"
-	"goyoubbs/util"
 	"goyoubbs/youdb"
-	"log"
-	"net/url"
-	"runtime"
-	"strings"
 )
 
 type MainConf struct {
@@ -98,74 +92,4 @@ func LoadConfig() *viper.Viper {
 	}
 
 	return viper.GetViper()
-}
-
-func (app *Application) Init(c *viper.Viper, currentFilePath string) {
-
-	mcf := &MainConf{}
-	err := c.UnmarshalKey("Main", mcf)
-	if err != nil {
-
-		return
-	}
-	// check domain
-	if strings.HasPrefix(mcf.Domain, "http") {
-		dm, err := url.Parse(mcf.Domain)
-		if err != nil {
-			log.Fatal("domain fmt err", err)
-		}
-		mcf.Domain = dm.Host
-	} else {
-		mcf.Domain = strings.Trim(mcf.Domain, "/")
-	}
-
-	scf := &SiteConf{}
-	err2 := c.UnmarshalKey("Site", scf)
-	if err2 != nil {
-		return
-	}
-	scf.GoVersion = runtime.Version()
-	fMd5, _ := util.HashFileMD5(currentFilePath)
-	scf.MD5Sums = fMd5
-	scf.MainDomain = strings.Trim(scf.MainDomain, "/")
-	log.Println("MainDomain:", scf.MainDomain)
-	if scf.TimeZone < -12 || scf.TimeZone > 12 {
-		scf.TimeZone = 0
-	}
-	if scf.UploadMaxSize < 1 {
-		scf.UploadMaxSize = 1
-	}
-	scf.UploadMaxSizeByte = int64(scf.UploadMaxSize) << 20
-
-	app.Cf = &AppConf{mcf, scf}
-	color.Redln("打开数据库")
-	db, err := youdb.Open(mcf.Youdb)
-	if err != nil {
-		log.Fatalf("Connect Error: %v", err)
-	}
-	app.Db = db
-
-	defer db.Close()
-	// set main node
-	db.Hset("keyValue", []byte("main_category"), []byte(scf.MainNodeIds))
-
-	var hashKey []byte
-	var blockKey []byte
-	if scf.ResetCookieKey {
-		hashKey = securecookie.GenerateRandomKey(64)
-		blockKey = securecookie.GenerateRandomKey(32)
-		_ = db.Hmset("keyValue", []byte("hashKey"), hashKey, []byte("blockKey"), blockKey)
-	} else {
-		hashKey = append(hashKey, db.Hget("keyValue", []byte("hashKey")).Bytes()...)
-		blockKey = append(blockKey, db.Hget("keyValue", []byte("blockKey")).Bytes()...)
-		if len(hashKey) == 0 {
-			hashKey = securecookie.GenerateRandomKey(64)
-			blockKey = securecookie.GenerateRandomKey(32)
-			_ = db.Hmset("keyValue", []byte("hashKey"), hashKey, []byte("blockKey"), blockKey)
-		}
-	}
-
-	app.Sc = securecookie.New(hashKey, blockKey)
-	//app.Sc.SetSerializer(securecookie.JSONEncoder{})
-
 }

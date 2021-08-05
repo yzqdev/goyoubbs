@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"github.com/gookit/color"
+	"github.com/gorilla/securecookie"
 	"github.com/xi2/httpgzip"
 	"golang.org/x/crypto/acme/autocert"
 	"golang.org/x/net/http2"
@@ -11,11 +13,15 @@ import (
 	"goyoubbs/goji/pat"
 	"goyoubbs/router"
 	"goyoubbs/system"
+	"goyoubbs/util"
+	"goyoubbs/youdb"
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
+	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
@@ -25,18 +31,77 @@ import (
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	c := system.LoadConfig()
 	app := &system.Application{}
-	app.Init(c, os.Args[0])
+	c := system.LoadConfig()
+	mcf := &system.MainConf{}
+	err := c.UnmarshalKey("Main", mcf)
+	if err != nil {
 
+		return
+	}
+	// check domain
+	if strings.HasPrefix(mcf.Domain, "http") {
+		dm, err := url.Parse(mcf.Domain)
+		if err != nil {
+			log.Fatal("domain fmt err", err)
+		}
+		mcf.Domain = dm.Host
+	} else {
+		mcf.Domain = strings.Trim(mcf.Domain, "/")
+	}
+
+	scf := &system.SiteConf{}
+	err2 := c.UnmarshalKey("Site", scf)
+	if err2 != nil {
+		return
+	}
+	scf.GoVersion = runtime.Version()
+	fMd5, _ := util.HashFileMD5(os.Args[0])
+	scf.MD5Sums = fMd5
+	scf.MainDomain = strings.Trim(scf.MainDomain, "/")
+	log.Println("MainDomain:", scf.MainDomain)
+	if scf.TimeZone < -12 || scf.TimeZone > 12 {
+		scf.TimeZone = 0
+	}
+	if scf.UploadMaxSize < 1 {
+		scf.UploadMaxSize = 1
+	}
+	scf.UploadMaxSizeByte = int64(scf.UploadMaxSize) << 20
+
+	app.Cf = &system.AppConf{mcf, scf}
+	color.Redln("打开数据库")
+	db, err := youdb.Open(mcf.Youdb)
+	if err != nil {
+		log.Fatalf("Connect Error: %v", err)
+	}
+	app.Db = db
+
+	defer app.Db.Close()
+	// set main node
+	db.Hset("keyValue", []byte("main_category"), []byte(scf.MainNodeIds))
+
+	var hashKey []byte
+	var blockKey []byte
+	if scf.ResetCookieKey {
+		hashKey = securecookie.GenerateRandomKey(64)
+		blockKey = securecookie.GenerateRandomKey(32)
+		_ = db.Hmset("keyValue", []byte("hashKey"), hashKey, []byte("blockKey"), blockKey)
+	} else {
+		hashKey = append(hashKey, db.Hget("keyValue", []byte("hashKey")).Bytes()...)
+		blockKey = append(blockKey, db.Hget("keyValue", []byte("blockKey")).Bytes()...)
+		if len(hashKey) == 0 {
+			hashKey = securecookie.GenerateRandomKey(64)
+			blockKey = securecookie.GenerateRandomKey(32)
+			_ = db.Hmset("keyValue", []byte("hashKey"), hashKey, []byte("blockKey"), blockKey)
+		}
+	}
+
+	app.Sc = securecookie.New(hashKey, blockKey)
 	// cron job
 	cr := cronjob.BaseHandler{App: app}
 	go cr.MainCronJob()
 
 	root := goji.NewMux()
-
-	mcf := app.Cf.Main
-	scf := app.Cf.Site
 
 	// static file server
 	staticPath := mcf.PubDir
