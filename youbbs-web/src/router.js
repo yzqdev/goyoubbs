@@ -8,7 +8,7 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
-    children: [{ path: "main", name: "main", component: Main }],
+    children: [{ path: "main", name: "main", component: Main },{ path: "setting", name: "setting", component: Main }],
   },
 ];
 
