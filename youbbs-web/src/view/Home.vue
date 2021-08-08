@@ -5,25 +5,15 @@
         <a href="/">{{ site.name }}</a>
       </div>
       <div class="scbox">
-        <form
-          role="search"
-          method="get"
-          id="searchform"
-          onsubmit="return dispatch()"
-          target="_blank"
+        <el-input
+          v-model="searchTxt"
+          style="height: 30px"
+          maxlength="30"
+          placeholder="站内搜索"
+          value="站内搜索"
+          @keyup.enter="searchText"
         >
-          <input
-            type="text"
-            class="form-control"
-            style="height: 30px"
-            maxlength="30"
-            onfocus="if(this.value=='站内搜索') this.value='';"
-            onblur="if(this.value=='') this.value='站内搜索';"
-            value="站内搜索"
-            name="q"
-            id="q"
-          />
-        </form>
+        </el-input>
       </div>
 
       <div class="banner">
@@ -120,6 +110,7 @@ export default {
   data() {
     return {
       site: { goVersion: "1.1", MD5Sums: "" },
+      searchTxt: "",
       CurrentUser: {
         id: "",
         name: "",
@@ -128,6 +119,11 @@ export default {
         flag: 0,
       },
     };
+  },
+  methods: {
+    searchText() {
+      console.log(this.searchTxt);
+    },
   },
 };
 </script>
@@ -138,7 +134,7 @@ export default {
   min-width: 1020px;
 
   color: #fff;
-  background: #000 ;
+  background: #000;
   padding: 0;
   -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
   .header {
@@ -196,12 +192,13 @@ export default {
   }
 }
 .main-wrap {
-  flex:1;
+  flex: 1;
 
   width: 100%;
   min-width: 1020px;
   background-color: #ccc;
-  padding: 20px 0 20px 0;}
+  padding: 20px 0 20px 0;
+}
 .hdlogo {
   display: none;
 }
