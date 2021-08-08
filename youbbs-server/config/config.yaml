@@ -1,5 +1,5 @@
 Main:
-    HttpPort: 8082
+    HttpPort: 8040
     HttpsOn: false
     Domain: ""
     HttpsPort: 443
@@ -15,7 +15,7 @@ Site:
     Name: "杨总后花园"
     Desc: "杨总的后宫,其实"
     AdminEmail: ""
-    MainDomain: "http://127.0.0.1:8082"
+    MainDomain: "http://127.0.0.1:8040"
     MainNodeIds: "1,2,3,4,5,6,7,8,9,10"
     TimeZone: 8
     HomeShowNum: 20

@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
   plugins: [
     Vue({
-      include: [/\.vue$/, /\.md$/], // <--
+      include: [/\.vue$/ ], // <--
     }),
 
   ],

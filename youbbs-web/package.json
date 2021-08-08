@@ -2,17 +2,18 @@
   "name": "youbbs",
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "yarn &&vite --host",
     "build": "vite build",
     "serve": "vite preview"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^1.3.0",
+    "@vitejs/plugin-vue": "^1.4.0",
     "axios": "^0.21.1",
-    "element-plus": "^1.0.2-beta.69",
+    "bootstrap": "^5.1.0",
+    "element-plus": "^1.0.2-beta.70",
     "less": "^4.1.1",
     "prettier": "^2.3.2",
-    "vue": "^3.1.4",
+    "vue": "^3.1.5",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
   },
