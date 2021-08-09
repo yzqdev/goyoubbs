@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"goyoubbs/goji/pat"
+
 	"goyoubbs/model"
 	"net/http"
 	"strconv"

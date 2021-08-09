@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/gookit/color"
 	"github.com/rs/xid"
 	"goyoubbs/model"
 	"goyoubbs/util"
@@ -22,14 +23,23 @@ func (h *BaseHandler) ArticleEdit(c *gin.Context) {
 		util.JSON(c, 400, "cid type err", "")
 		return
 	}
+	userContext, exist := c.Get("user")
+	if !exist {
+		color.Danger.Println("失败了")
+	}
+	//查询用户组及该组的功能权限
+	currentUser, ok := userContext.(model.User) //这个是类型推断,判断接口是什么类型
+	if !ok {
 
-	currentUser, _ := h.CurrentUser(w, r)
+		color.Danger.Println("断言失败")
+	}
+
 	if currentUser.Id == 0 {
-		w.Write([]byte(`{"retcode":401,"retmsg":"authored err"}`))
+		//w.Write([]byte(`{"retcode":401,"retmsg":"authored err"}`))
 		return
 	}
 	if currentUser.Flag < 99 {
-		w.Write([]byte(`{"retcode":403,"retmsg":"flag forbidden}`))
+		//w.Write([]byte(`{"retcode":403,"retmsg":"flag forbidden}`))
 		return
 	}
 
@@ -37,18 +47,17 @@ func (h *BaseHandler) ArticleEdit(c *gin.Context) {
 
 	aobj, err := model.ArticleGetById(db, aid)
 	if err != nil {
-		w.Write([]byte(`{"retcode":403,"retmsg":"aid not found"}`))
-		return
+		//w.Write([]byte(`{"retcode":403,"retmsg":"aid not found"}`))
 	}
 	aidB := youdb.I2b(aobj.Id)
 
 	cobj, err := model.CategoryGetById(db, strconv.FormatUint(aobj.Cid, 10))
 	if err != nil {
-		w.Write([]byte(`{"retcode":404,"retmsg":"` + err.Error() + `"}`))
+		//w.Write([]byte(`{"retcode":404,"retmsg":"` + err.Error() + `"}`))
 		return
 	}
 
-	act := r.FormValue("act")
+	act := c.PostForm("act")
 
 	if act == "del" {
 		// remove
@@ -86,8 +95,6 @@ func (h *BaseHandler) ArticleEdit(c *gin.Context) {
 		jb, _ = json.Marshal(at)
 		db.Hset("task_to_set_tag", youdb.I2b(at.Id), jb)
 
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
 	}
 
 	type pageData struct {
@@ -115,28 +122,30 @@ func (h *BaseHandler) ArticleEdit(c *gin.Context) {
 }
 
 func (h *BaseHandler) ArticleEditPost(c *gin.Context) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	aid := pat.Param(r, "aid")
+	aid := c.Param("aid")
 	aidI, err := strconv.Atoi(aid)
 	if err != nil {
-		w.Write([]byte(`{"retcode":400,"retmsg":"cid type err"}`))
+		//w.Write([]byte(`{"retcode":400,"retmsg":"cid type err"}`))
 		return
 	}
+	userContext, exist := c.Get("user")
+	if !exist {
+		color.Danger.Println("失败了")
+	}
+	//查询用户组及该组的功能权限
+	currentUser, ok := userContext.(model.User) //这个是类型推断,判断接口是什么类型
+	if !ok {
 
-	token := h.GetCookie(r, "token")
-	if len(token) == 0 {
-		w.Write([]byte(`{"retcode":400,"retmsg":"token cookie missed"}`))
-		return
+		color.Danger.Println("断言失败")
 	}
 
-	currentUser, _ := h.CurrentUser(w, r)
 	if currentUser.Id == 0 {
-		w.Write([]byte(`{"retcode":401,"retmsg":"authored require"}`))
+		//w.Write([]byte(`{"retcode":401,"retmsg":"authored require"}`))
 		return
 	}
 	if currentUser.Flag < 99 {
-		w.Write([]byte(`{"retcode":403,"retmsg":"flag forbidden}`))
+		//w.Write([]byte(`{"retcode":403,"retmsg":"flag forbidden}`))
 		return
 	}
 
@@ -150,14 +159,7 @@ func (h *BaseHandler) ArticleEditPost(c *gin.Context) {
 		CloseComment string `json:"closecomment"`
 	}
 
-	decoder := json.NewDecoder(r.Body)
 	var rec recForm
-	err = decoder.Decode(&rec)
-	if err != nil {
-		w.Write([]byte(`{"retcode":400,"retmsg":"json Decode err:` + err.Error() + `"}`))
-		return
-	}
-	defer r.Body.Close()
 
 	rec.Aid = uint64(aidI)
 
@@ -177,8 +179,6 @@ func (h *BaseHandler) ArticleEditPost(c *gin.Context) {
 			normalRsp{200, ""},
 			util.ContentFmt(db, h.App.Cf.Site.MainDomain, rec.Content),
 		}
-		json.NewEncoder(w).Encode(tmp)
-		return
 	}
 
 	// check title

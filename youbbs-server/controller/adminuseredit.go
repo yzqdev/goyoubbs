@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
-	"goyoubbs/goji/pat"
+
 	"goyoubbs/model"
 	"goyoubbs/util"
 	"goyoubbs/youdb"
