@@ -28,23 +28,10 @@ type recForm struct {
 	CaptchaSolution string `json:"captchaSolution"`
 }
 
-type response struct {
-	normalRsp
-}
-
 func Register(c *gin.Context) {
-	db := h.App.Db
+
 	var rec recForm
-	// register
-	siteCf := h.App.Cf.Site
-	if siteCf.QQClientID > 0 || siteCf.WeiboClientID > 0 {
-		utils.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "请用QQ 或 微博一键登录"})
-		return
-	}
-	if siteCf.CloseReg {
-		utils.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "stop to new register"})
-		return
-	}
+
 	var nameLow string
 	if db.Hget("user_name2uid", []byte(nameLow)).State == "ok" {
 
@@ -54,9 +41,6 @@ func Register(c *gin.Context) {
 
 	userId, _ := db.Hincr("count", []byte("user"), 1)
 	flag := 5
-	if siteCf.RegReview {
-		flag = 1
-	}
 
 	if userId == 1 {
 		flag = 99
@@ -69,25 +53,23 @@ func Register(c *gin.Context) {
 		Flag:          flag,
 		RegTime:       timeStamp,
 		LastLoginTime: timeStamp,
-		Session:       xid.New().String(),
 	}
 
 	uidStr := strconv.FormatUint(userId, 10)
 
-	err := util.GenerateAvatar("male", rec.Name, 73, 73, GetAppHome("/avatar/")+uidStr+".jpg")
+	err := utils.GenerateAvatar("male", rec.Name, 73, 73, GetAppHome("/avatar/")+uidStr+".jpg")
 	if err != nil {
 		uobj.Avatar = "0"
 	} else {
 		uobj.Avatar = uidStr
 	}
 
-	jb, _ := json.Marshal(uobj)
-	db.Hset("user", youdb.I2b(uobj.Id), jb)
-	db.Hset("user_name2uid", []byte(nameLow), youdb.I2b(userId))
-	db.Hset("user_flag:"+strconv.Itoa(flag), youdb.I2b(uobj.Id), []byte(""))
+	//db.Hset("user", youdb.I2b(uobj.Id), jb)
+	//db.Hset("user_name2uid", []byte(nameLow), youdb.I2b(userId))
+	//db.Hset("user_flag:"+strconv.Itoa(flag), youdb.I2b(uobj.Id), []byte(""))
 
 }
-func UserLoginPost(c *gin.Context) {
+func UserLogin(c *gin.Context) {
 	c.Header("Content-Type", "application/json; charset=UTF-8")
 	token := c.GetHeader("token")
 	if len(token) == 0 {

@@ -1,11 +1,5 @@
 package model
 
-import (
-	"encoding/json"
-	"errors"
-	"github.com/gookit/color"
-)
-
 type User struct {
 	Id            uint64 `json:"id"`
 	Name          string `json:"name"`
@@ -17,15 +11,14 @@ type User struct {
 	Url           string `json:"url"`
 	Articles      uint64 `json:"articles"`
 	Replies       uint64 `json:"replies"`
-	RegTime       uint64 `json:"regtime"`
-	LastPostTime  uint64 `json:"lastposttime"`
-	LastReplyTime uint64 `json:"lastreplytime"`
-	LastLoginTime uint64 `json:"lastlogintime"`
+	RegTime       uint64 `json:"reg_time"`
+	LastPostTime  uint64 `json:"last_post_time"`
+	LastReplyTime uint64 `json:"last_reply_time"`
+	LastLoginTime uint64 `json:"last_login_time"`
 	About         string `json:"about"`
 	Notice        string `json:"notice"`
-	NoticeNum     int    `json:"noticenum"`
+	NoticeNum     int    `json:"notice_num"`
 	Hidden        bool   `json:"hidden"`
-	Session       string `json:"session"`
 }
 
 type UserMini struct {
@@ -42,94 +35,96 @@ type UserPageInfo struct {
 	LastKey  uint64 `json:"lastkey"`
 }
 
-func UserGetById(uid uint64) *User {
-	user := &User{}
-	db := GetDb()
-	db.Table("user").Where("id = ?", uid).First(&user)
-	return user
-}
-
-func UserUpdate(obj User) error {
-	jb, _ := json.Marshal(obj)
-	return db.Hset("user", youdb.I2b(obj.Id), jb)
-}
-
-func UserGetByName(name string) (User, error) {
+func UserGetById(uid uint64) User {
 	obj := User{}
-
-	rs := db.Hget("user_name2uid", []byte(name))
-	color.Redln(rs.State)
-	if rs.State == "ok" {
-		rs2 := db.Hget("user", rs.Data[0])
-		if rs2.State == "ok" {
-			json.Unmarshal(rs2.Data[0], &obj)
-			return obj, nil
-		}
-		return obj, errors.New(rs2.State)
-	}
-	return obj, errors.New(rs.State)
+	db := GetDb()
+	db.Table("user").Where("id =?", uid).First(&obj)
+	return obj
 }
 
-func UserGetIdByName(name string) string {
-	rs := db.Hget("user_name2uid", []byte(name))
-	if rs.State == "ok" {
-		return youdb.B2ds(rs.Data[0])
-	}
-	return ""
+func UserUpdate(obj User) {
+	//db:=GetDb()
+	//db.Table("user").Where("id = ?",obj.Id).Update(&obj)
+}
+
+func UserGetByName(name string) {
+	//obj := User{}
+
+	//rs := db.Hget("user_name2uid", []byte(name))
+	//color.Redln(rs.State)
+	//if rs.State == "ok" {
+	//	rs2 := db.Hget("user", rs.Data[0])
+	//	if rs2.State == "ok" {
+	//		json.Unmarshal(rs2.Data[0], &obj)
+	//		return obj, nil
+	//	}
+	//	return obj, errors.New(rs2.State)
+	//}
+	//return obj, errors.New(rs.State)
+}
+
+func UserGetIdByName(name string) {
+	//rs := db.Hget("user_name2uid", []byte(name))
+	//if rs.State == "ok" {
+	//	return youdb.B2ds(rs.Data[0])
+	//}
+	//return ""
 }
 
 func UserListByFlag(cmd, tb, key string, limit int) UserPageInfo {
-	var items []User
-	var keys [][]byte
-	var hasPrev, hasNext bool
-	var firstKey, lastKey uint64
-
-	keyStart := youdb.DS2b(key)
-	if cmd == "hrscan" {
-		rs := db.Hrscan(tb, keyStart, limit)
-		if rs.State == "ok" {
-			for i := 0; i < (len(rs.Data) - 1); i += 2 {
-				keys = append(keys, rs.Data[i])
-			}
-		}
-	} else if cmd == "hscan" {
-		rs := db.Hscan(tb, keyStart, limit)
-		if rs.State == "ok" {
-			for i := len(rs.Data) - 2; i >= 0; i -= 2 {
-				keys = append(keys, rs.Data[i])
-			}
-		}
-	}
-
-	if len(keys) > 0 {
-		rs := db.Hmget("user", keys)
-		if rs.State == "ok" {
-			for i := 0; i < (len(rs.Data) - 1); i += 2 {
-				item := User{}
-				json.Unmarshal(rs.Data[i+1], &item)
-				items = append(items, item)
-				if firstKey == 0 {
-					firstKey = item.Id
-				}
-				lastKey = item.Id
-			}
-
-			rs = db.Hscan(tb, youdb.I2b(firstKey), 1)
-			if rs.State == "ok" {
-				hasPrev = true
-			}
-			rs = db.Hrscan(tb, youdb.I2b(lastKey), 1)
-			if rs.State == "ok" {
-				hasNext = true
-			}
-		}
-	}
-
-	return UserPageInfo{
-		Items:    items,
-		HasPrev:  hasPrev,
-		HasNext:  hasNext,
-		FirstKey: firstKey,
-		LastKey:  lastKey,
-	}
+	//var items []User
+	//var keys [][]byte
+	//var hasPrev, hasNext bool
+	//var firstKey, lastKey uint64
+	//
+	//keyStart := youdb.DS2b(key)
+	//if cmd == "hrscan" {
+	//	rs := db.Hrscan(tb, keyStart, limit)
+	//	if rs.State == "ok" {
+	//		for i := 0; i < (len(rs.Data) - 1); i += 2 {
+	//			keys = append(keys, rs.Data[i])
+	//		}
+	//	}
+	//} else if cmd == "hscan" {
+	//	rs := db.Hscan(tb, keyStart, limit)
+	//	if rs.State == "ok" {
+	//		for i := len(rs.Data) - 2; i >= 0; i -= 2 {
+	//			keys = append(keys, rs.Data[i])
+	//		}
+	//	}
+	//}
+	//
+	//if len(keys) > 0 {
+	//	rs := db.Hmget("user", keys)
+	//	if rs.State == "ok" {
+	//		for i := 0; i < (len(rs.Data) - 1); i += 2 {
+	//			item := User{}
+	//			json.Unmarshal(rs.Data[i+1], &item)
+	//			items = append(items, item)
+	//			if firstKey == 0 {
+	//				firstKey = item.Id
+	//			}
+	//			lastKey = item.Id
+	//		}
+	//
+	//		rs = db.Hscan(tb, youdb.I2b(firstKey), 1)
+	//		if rs.State == "ok" {
+	//			hasPrev = true
+	//		}
+	//		rs = db.Hrscan(tb, youdb.I2b(lastKey), 1)
+	//		if rs.State == "ok" {
+	//			hasNext = true
+	//		}
+	//	}
+	//}
+	//
+	//return UserPageInfo{
+	//	Items:    items,
+	//	HasPrev:  hasPrev,
+	//	HasNext:  hasNext,
+	//	FirstKey: firstKey,
+	//	LastKey:  lastKey,
+	//}
+	obj := UserPageInfo{}
+	return obj
 }
