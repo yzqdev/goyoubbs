@@ -2,16 +2,15 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
-
+	"goyoubbs/goji/pat"
 	"goyoubbs/model"
 	"goyoubbs/util"
 	"net/http"
 	"strconv"
 )
 
-func (h *BaseHandler) CommentEdit(c *gin.Context) {
+func (h *BaseHandler) CommentEdit(w http.ResponseWriter, r *http.Request) {
 	aid, cid := pat.Param(r, "aid"), pat.Param(r, "cid")
 	_, err := strconv.ParseUint(aid, 10, 64)
 	if err != nil {
@@ -76,7 +75,7 @@ func (h *BaseHandler) CommentEdit(c *gin.Context) {
 	h.Render(w, tpl, evn, "layout.html", "admincommentedit.html")
 }
 
-func (h *BaseHandler) CommentEditPost(c *gin.Context) {
+func (h *BaseHandler) CommentEditPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	aid, cid := pat.Param(r, "aid"), pat.Param(r, "cid")

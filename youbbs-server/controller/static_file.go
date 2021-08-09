@@ -1,21 +1,21 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
+	"goyoubbs/goji/pat"
 	"io/ioutil"
 	"net/http"
 )
 
-func (h *BaseHandler) StaticFile(c *gin.Context) {
-	filePath := c.Param("filepath")
+func (h *BaseHandler) StaticFile(w http.ResponseWriter, r *http.Request) {
+	filePath := pat.Param(r, "filepath")
 	buf, err := ioutil.ReadFile("static/" + filePath)
 	if err != nil {
-		c.Header("Content-Type", "text/plain; charset=utf-8")
-		//w.WriteHeader(http.StatusNotFound)
-		//_, _ = w.Write([]byte(err.Error()))
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 	fileType := http.DetectContentType(buf)
-	c.Header("Content-Type", fileType)
-	//_, _ = w.Write(buf)
+	w.Header().Set("Content-Type", fileType)
+	_, _ = w.Write(buf)
 }

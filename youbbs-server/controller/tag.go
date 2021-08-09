@@ -1,16 +1,15 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-
+	"goyoubbs/goji/pat"
 	"goyoubbs/model"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-func (h *BaseHandler) TagDetail(c *gin.Context) {
-	btn, key := c.PostForm("btn"), c.PostForm("key")
+func (h *BaseHandler) TagDetail(w http.ResponseWriter, r *http.Request) {
+	btn, key := r.FormValue("btn"), r.FormValue("key")
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
 		if err != nil {
@@ -19,7 +18,7 @@ func (h *BaseHandler) TagDetail(c *gin.Context) {
 		}
 	}
 
-	tag := c.Param("tag")
+	tag := pat.Param(r, "tag")
 	tagLow := strings.ToLower(tag)
 
 	cmd := "hrscan"
@@ -31,7 +30,7 @@ func (h *BaseHandler) TagDetail(c *gin.Context) {
 	scf := h.App.Cf.Site
 	rs := db.Hscan("tag:"+tagLow, nil, 1)
 	if rs.State != "ok" {
-		//w.Write([]byte(`{"retcode":404,"retmsg":"not found"}`))
+		w.Write([]byte(`{"retcode":404,"retmsg":"not found"}`))
 		return
 	}
 

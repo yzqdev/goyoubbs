@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 	"goyoubbs/lib/qqOAuth"
 	"goyoubbs/model"
@@ -14,7 +13,7 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) QQOauthHandler(c *gin.Context) {
+func (h *BaseHandler) QQOauthHandler(w http.ResponseWriter, r *http.Request) {
 	scf := h.App.Cf.Site
 	qq, err := qqOAuth.NewQQOAuth(strconv.Itoa(scf.QQClientID), scf.QQClientSecret, scf.MainDomain+"/oauth/qq/callback")
 	if err != nil {
@@ -39,7 +38,7 @@ func (h *BaseHandler) QQOauthHandler(c *gin.Context) {
 	http.Redirect(w, r, urlStr, http.StatusSeeOther)
 }
 
-func (h *BaseHandler) QQOauthCallback(c *gin.Context) {
+func (h *BaseHandler) QQOauthCallback(w http.ResponseWriter, r *http.Request) {
 	qqUrlState := h.GetCookie(r, "QQUrlState")
 	if len(qqUrlState) == 0 {
 		w.Write([]byte(`qqUrlState cookie missed`))

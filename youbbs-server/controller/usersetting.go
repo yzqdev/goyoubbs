@@ -3,8 +3,8 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"github.com/gookit/color"
+	"github.com/rs/xid"
 	"goyoubbs/model"
 	"goyoubbs/util"
 	"goyoubbs/youdb"
@@ -14,19 +14,10 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) UserSetting(c *gin.Context) {
-	userContext, exist := c.Get("user")
-	if !exist {
-		color.Danger.Println("失败了")
-	}
-	//查询用户组及该组的功能权限
-	currentUser, ok := userContext.(model.User) //这个是类型推断,判断接口是什么类型
-	if !ok {
-
-		color.Danger.Println("断言失败")
-	}
+func (h *BaseHandler) UserSetting(w http.ResponseWriter, r *http.Request) {
+	currentUser, _ := h.CurrentUser(w, r)
 	if currentUser.Id == 0 {
-		//http.Redirect(w, r, "/login", http.StatusSeeOther)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
@@ -36,12 +27,13 @@ func (h *BaseHandler) UserSetting(c *gin.Context) {
 		Now  int64
 	}
 
+	tpl := h.CurrentTpl(r)
 	evn := &pageData{}
 	evn.SiteCf = h.App.Cf.Site
 	evn.Title = "设置"
 	evn.Keywords = ""
 	evn.Description = ""
-	//evn.IsMobile = tpl == "mobile"
+	evn.IsMobile = tpl == "mobile"
 	evn.CurrentUser = currentUser
 
 	evn.ShowSideAd = true
@@ -49,28 +41,28 @@ func (h *BaseHandler) UserSetting(c *gin.Context) {
 
 	evn.Uobj = currentUser
 	evn.Now = time.Now().UTC().Unix()
-	util.JSON(c, 200, "sucess", evn)
+
+	h.SetCookie(w, "token", xid.New().String(), 1)
+	h.Render(w, tpl, evn, "layout.html", "usersetting.html")
 }
 
-func (h *BaseHandler) UserSettingPost(c *gin.Context) {
+func (h *BaseHandler) UserSettingPost(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	userContext, exist := c.Get("user")
-	if !exist {
-		color.Danger.Println("失败了")
+	token := h.GetCookie(r, "token")
+	if len(token) == 0 {
+		w.Write([]byte(`{"retcode":400,"retmsg":"token cookie missed"}`))
+		return
 	}
-	//查询用户组及该组的功能权限
-	currentUser, ok := userContext.(model.User) //这个是类型推断,判断接口是什么类型
-	if !ok {
 
-		color.Danger.Println("断言失败")
-	}
+	currentUser, _ := h.CurrentUser(w, r)
 	if currentUser.Id == 0 {
-		//w.Write([]byte(`{"retcode":401,"retmsg":"authored require"}`))
+		w.Write([]byte(`{"retcode":401,"retmsg":"authored require"}`))
 		return
 	}
 
 	// r.ParseForm() // don't use ParseForm !important
-	act := c.PostForm("act")
+	act := r.FormValue("act")
 	if act == "avatar" {
 
 		r.ParseMultipartForm(32 << 20)
@@ -131,7 +123,14 @@ func (h *BaseHandler) UserSettingPost(c *gin.Context) {
 		Password  string `json:"password"`
 	}
 
+	decoder := json.NewDecoder(r.Body)
 	var rec recForm
+	err := decoder.Decode(&rec)
+	if err != nil {
+		w.Write([]byte(`{"retcode":400,"retmsg":"json Decode err:` + err.Error() + `"}`))
+		return
+	}
+	defer r.Body.Close()
 
 	recAct := rec.Act
 	if len(recAct) == 0 {

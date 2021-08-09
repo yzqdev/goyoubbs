@@ -4,9 +4,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
-
+	"goyoubbs/goji/pat"
 	"goyoubbs/model"
 	"goyoubbs/util"
 	"goyoubbs/youdb"
@@ -17,7 +16,7 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) ArticleAdd(c *gin.Context) {
+func (h *BaseHandler) ArticleAdd(w http.ResponseWriter, r *http.Request) {
 	cid := pat.Param(r, "cid")
 	_, err := strconv.Atoi(cid)
 	if err != nil {
@@ -76,7 +75,7 @@ func (h *BaseHandler) ArticleAdd(c *gin.Context) {
 	h.Render(w, tpl, evn, "layout.html", "articlecreate.html")
 }
 
-func (h *BaseHandler) ArticleAddPost(c *gin.Context) {
+func (h *BaseHandler) ArticleAddPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	token := h.GetCookie(r, "token")
@@ -253,19 +252,19 @@ func (h *BaseHandler) ArticleAddPost(c *gin.Context) {
 	json.NewEncoder(w).Encode(tmp)
 }
 
-func (h *BaseHandler) ArticleHomeList(c *gin.Context) {
-	btn, key, score := c.PostForm("btn"), c.PostForm("key"), c.PostForm("score")
+func (h *BaseHandler) ArticleHomeList(w http.ResponseWriter, r *http.Request) {
+	btn, key, score := r.FormValue("btn"), r.FormValue("key"), r.FormValue("score")
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
 		if err != nil {
-			util.JSON(c, 400, "key typeErr", "")
-
+			w.Write([]byte(`{"retcode":400,"retmsg":"key type err"}`))
+			return
 		}
 	}
 	if len(score) > 0 {
 		_, err := strconv.ParseUint(score, 10, 64)
 		if err != nil {
-			util.JSON(c, 400, "score typeErr", "")
+			w.Write([]byte(`{"retcode":400,"retmsg":"score type err"}`))
 			return
 		}
 	}
@@ -341,6 +340,7 @@ func (h *BaseHandler) ArticleHomeList(c *gin.Context) {
 		})
 	}
 
+	tpl := h.CurrentTpl(r)
 	evn := &pageData{}
 	evn.SiteCf = scf
 	evn.Title = scf.Name
@@ -358,11 +358,11 @@ func (h *BaseHandler) ArticleHomeList(c *gin.Context) {
 	evn.PageInfo = pageInfo
 	evn.Links = model.LinkList(db, false)
 
-	util.JSON(c, 200, "success", evn)
+	h.Render(w, tpl, evn, "layout.html", "index.html")
 }
 
-func (h *BaseHandler) ArticleDetail(c *gin.Context) {
-	btn, key, score := c.PostForm("btn"), c.PostForm("key"), c.PostForm("score")
+func (h *BaseHandler) ArticleDetail(w http.ResponseWriter, r *http.Request) {
+	btn, key, score := r.FormValue("btn"), r.FormValue("key"), r.FormValue("score")
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
 		if err != nil {
@@ -512,7 +512,7 @@ func (h *BaseHandler) ArticleDetail(c *gin.Context) {
 	h.Render(w, tpl, evn, "layout.html", "article.html")
 }
 
-func (h *BaseHandler) ArticleDetailPost(c *gin.Context) {
+func (h *BaseHandler) ArticleDetailPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	token := h.GetCookie(r, "token")
 	if len(token) == 0 {
@@ -666,7 +666,7 @@ func (h *BaseHandler) ArticleDetailPost(c *gin.Context) {
 	json.NewEncoder(w).Encode(rsp)
 }
 
-func (h *BaseHandler) ContentPreviewPost(c *gin.Context) {
+func (h *BaseHandler) ContentPreviewPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	token := h.GetCookie(r, "token")
 	if len(token) == 0 {

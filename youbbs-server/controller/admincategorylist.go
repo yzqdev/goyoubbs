@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func (h *BaseHandler) AdminCategoryList(c *gin.Context) {
+func (h *BaseHandler) AdminCategoryList(w http.ResponseWriter, r *http.Request) {
 	cid, btn, key := r.FormValue("cid"), r.FormValue("btn"), r.FormValue("key")
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
@@ -74,7 +74,7 @@ func (h *BaseHandler) AdminCategoryList(c *gin.Context) {
 	h.Render(w, tpl, evn, "layout.html", "admincategorylist.html")
 }
 
-func (h *BaseHandler) AdminCategoryListPost(c *gin.Context) {
+func (h *BaseHandler) AdminCategoryListPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	token := h.GetCookie(r, "token")
 	if len(token) == 0 {

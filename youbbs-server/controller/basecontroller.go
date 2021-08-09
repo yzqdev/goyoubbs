@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"goyoubbs/model"
 	"goyoubbs/system"
 	"goyoubbs/youdb"
@@ -59,7 +58,7 @@ func (h *BaseHandler) Render(w http.ResponseWriter, tpl string, data interface{}
 	return err
 }
 
-func (h *BaseHandler) CurrentUser(c *gin.Context) (model.User, error) {
+func (h *BaseHandler) CurrentUser(w http.ResponseWriter, r *http.Request) (model.User, error) {
 	var user model.User
 	ssValue := h.GetCookie(r, "SessionID")
 	if len(ssValue) == 0 {

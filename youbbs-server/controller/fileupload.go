@@ -6,7 +6,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"github.com/h2non/filetype"
 	"github.com/qiniu/api.v7/auth/qbox"
 	"github.com/qiniu/api.v7/storage"
@@ -21,7 +20,7 @@ import (
 	"strings"
 )
 
-func (h *BaseHandler) FileUpload(c *gin.Context) {
+func (h *BaseHandler) FileUpload(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	currentUser, _ := h.CurrentUser(w, r)
