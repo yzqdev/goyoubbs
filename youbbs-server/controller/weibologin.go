@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 	"goyoubbs/lib/weiboOAuth"
 	"goyoubbs/model"
@@ -13,7 +14,7 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) WeiboOauthHandler(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) WeiboOauthHandler(c *gin.Context) {
 	scf := h.App.Cf.Site
 	weibo, err := weiboOAuth.NewWeiboOAuth(strconv.Itoa(scf.WeiboClientID), scf.WeiboClientSecret, scf.MainDomain+"/oauth/wb/callback")
 	if err != nil {
@@ -35,7 +36,7 @@ func (h *BaseHandler) WeiboOauthHandler(w http.ResponseWriter, r *http.Request) 
 	http.Redirect(w, r, urlStr, http.StatusSeeOther)
 }
 
-func (h *BaseHandler) WeiboOauthCallback(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) WeiboOauthCallback(c *gin.Context) {
 	WeiboUrlState := h.GetCookie(r, "WeiboUrlState")
 	if len(WeiboUrlState) == 0 {
 		w.Write([]byte(`WeiboUrlState cookie missed`))

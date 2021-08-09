@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 	"goyoubbs/model"
 	"goyoubbs/util"
@@ -12,7 +13,7 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) AdminUserList(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) AdminUserList(c *gin.Context) {
 	flag, btn, key := r.FormValue("flag"), r.FormValue("btn"), r.FormValue("key")
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
@@ -72,7 +73,7 @@ func (h *BaseHandler) AdminUserList(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, tpl, evn, "layout.html", "adminuserlist.html")
 }
 
-func (h *BaseHandler) AdminUserListPost(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) AdminUserListPost(c *gin.Context) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	token := h.GetCookie(r, "token")
 	if len(token) == 0 {

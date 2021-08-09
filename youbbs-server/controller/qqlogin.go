@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) QQOauthHandler(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) QQOauthHandler(c *gin.Context) {
 	scf := h.App.Cf.Site
 	qq, err := qqOAuth.NewQQOAuth(strconv.Itoa(scf.QQClientID), scf.QQClientSecret, scf.MainDomain+"/oauth/qq/callback")
 	if err != nil {
@@ -38,7 +38,7 @@ func (h *BaseHandler) QQOauthHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, urlStr, http.StatusSeeOther)
 }
 
-func (h *BaseHandler) QQOauthCallback(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) QQOauthCallback(c *gin.Context) {
 	qqUrlState := h.GetCookie(r, "QQUrlState")
 	if len(qqUrlState) == 0 {
 		w.Write([]byte(`qqUrlState cookie missed`))

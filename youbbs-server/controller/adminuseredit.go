@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 	"goyoubbs/goji/pat"
 	"goyoubbs/model"
@@ -15,7 +16,7 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) UserEdit(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) UserEdit(c *gin.Context) {
 	uid := pat.Param(r, "uid")
 	uidI, err := strconv.ParseUint(uid, 10, 64)
 	if err != nil {
@@ -63,7 +64,7 @@ func (h *BaseHandler) UserEdit(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, tpl, evn, "layout.html", "adminuseredit.html")
 }
 
-func (h *BaseHandler) UserEditPost(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) UserEditPost(c *gin.Context) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	uid := pat.Param(r, "uid")

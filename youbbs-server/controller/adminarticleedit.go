@@ -5,8 +5,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
-	"goyoubbs/goji/pat"
 	"goyoubbs/model"
 	"goyoubbs/util"
 	"goyoubbs/youdb"
@@ -15,8 +15,8 @@ import (
 	"strings"
 )
 
-func (h *BaseHandler) ArticleEdit(w http.ResponseWriter, r *http.Request) {
-	aid := pat.Param(r, "aid")
+func (h *BaseHandler) ArticleEdit(c *gin.Context) {
+	aid := pat.Param("aid")
 	_, err := strconv.Atoi(aid)
 	if err != nil {
 		w.Write([]byte(`{"retcode":400,"retmsg":"cid type err"}`))
@@ -114,7 +114,7 @@ func (h *BaseHandler) ArticleEdit(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, tpl, evn, "layout.html", "adminarticleedit.html")
 }
 
-func (h *BaseHandler) ArticleEditPost(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) ArticleEditPost(c *gin.Context) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	aid := pat.Param(r, "aid")

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 	"goyoubbs/model"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 	"strings"
 )
 
-func (h *BaseHandler) AdminLinkList(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) AdminLinkList(c *gin.Context) {
 	lid := r.FormValue("lid")
 
 	db := h.App.Db
@@ -68,7 +69,7 @@ func (h *BaseHandler) AdminLinkList(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, tpl, evn, "layout.html", "adminlinklist.html")
 }
 
-func (h *BaseHandler) AdminLinkListPost(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) AdminLinkListPost(c *gin.Context) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	token := h.GetCookie(r, "token")
 	if len(token) == 0 {
