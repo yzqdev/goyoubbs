@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 	"github.com/gookit/color"
 	"github.com/rs/xid"
 	"goyoubbs/model"
@@ -15,38 +16,11 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) UserLogin(c *gin.Context) {
-	type pageData struct {
-		PageData
-		Act       string
-		Token     string
-		CaptchaId string
-	}
-	act := strings.TrimLeft(c.Request.Host, "/")
-	title := "登录"
-	if act == "register" {
-		title = "注册"
-	}
+var SecretKey = []byte("9hUxqaGelNnCZaCW")
 
-	evn := &pageData{}
-	evn.SiteCf = h.App.Cf.Site
-	evn.Title = title
-	evn.Keywords = ""
-	evn.Description = ""
-	//evn.IsMobile = tpl == "mobile"
-
-	evn.ShowSideAd = true
-	evn.PageName = "user_login_register"
-
-	evn.Act = act
-	evn.CaptchaId = captcha.NewLen(2)
-
-	token := h.GetCookie(r, "token")
-	if len(token) == 0 {
-		token := xid.New().String()
-		h.SetCookie(w, "token", token, 1)
-	}
-	util.JSON(c, 200, "success", evn)
+type NewJwtClaims struct {
+	*model.User
+	jwt.StandardClaims
 }
 
 type recForm struct {
@@ -66,15 +40,17 @@ func (h *BaseHandler) Register(c *gin.Context) {
 	// register
 	siteCf := h.App.Cf.Site
 	if siteCf.QQClientID > 0 || siteCf.WeiboClientID > 0 {
-		w.Write([]byte(`{"retcode":400,"retmsg":"请用QQ 或 微博一键登录"}`))
+		util.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "请用QQ 或 微博一键登录"})
 		return
 	}
 	if siteCf.CloseReg {
-		w.Write([]byte(`{"retcode":400,"retmsg":"stop to new register"}`))
+		util.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "stop to new register"})
 		return
 	}
+	var nameLow string
 	if db.Hget("user_name2uid", []byte(nameLow)).State == "ok" {
-		w.Write([]byte(`{"retcode":405,"retmsg":"name is exist","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
+
+		util.JSON(c, 405, "err", gin.H{"retcode": 405, "retmsg": "name is exist", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 		return
 	}
 
@@ -87,7 +63,7 @@ func (h *BaseHandler) Register(c *gin.Context) {
 	if userId == 1 {
 		flag = 99
 	}
-
+	timeStamp := uint64(time.Now().UTC().Unix())
 	uobj := model.User{
 		Id:            userId,
 		Name:          rec.Name,
@@ -100,7 +76,7 @@ func (h *BaseHandler) Register(c *gin.Context) {
 
 	uidStr := strconv.FormatUint(userId, 10)
 
-	err = util.GenerateAvatar("male", rec.Name, 73, 73, GetAppHome("/avatar/")+uidStr+".jpg")
+	err := util.GenerateAvatar("male", rec.Name, 73, 73, GetAppHome("/avatar/")+uidStr+".jpg")
 	if err != nil {
 		uobj.Avatar = "0"
 	} else {
@@ -112,46 +88,47 @@ func (h *BaseHandler) Register(c *gin.Context) {
 	db.Hset("user_name2uid", []byte(nameLow), youdb.I2b(userId))
 	db.Hset("user_flag:"+strconv.Itoa(flag), youdb.I2b(uobj.Id), []byte(""))
 
-	h.SetCookie(w, "SessionID", strconv.FormatUint(uobj.Id, 10)+":"+uobj.Session, 365)
-
 }
 func (h *BaseHandler) UserLoginPost(c *gin.Context) {
 	c.Header("Content-Type", "application/json; charset=UTF-8")
-	token := h.GetCookie(c, "token")
+	token := c.GetHeader("token")
 	if len(token) == 0 {
 		//w.Write([]byte(`{"retcode":400,"retmsg":"token cookie missed"}`))
-		return
+		util.JSON(c, 400, "error", gin.H{"retcode": 400, "retmsg": "token cookie missed"})
+
 	}
 
-	act := strings.TrimLeft(r.RequestURI, "/")
+	act := strings.TrimLeft(c.Request.Host, "/")
 
-	decoder := json.NewDecoder(r.Body)
 	var rec recForm
-	err := decoder.Decode(&rec)
-	if err != nil {
-		w.Write([]byte(`{"retcode":400,"retmsg":"json Decode err:` + err.Error() + `"}`))
-		return
+
+	if err := c.ShouldBind(rec); err != nil {
+		panic(err)
 	}
-	defer r.Body.Close()
 
 	if len(rec.Name) == 0 || len(rec.Password) == 0 {
-		w.Write([]byte(`{"retcode":400,"retmsg":"name or pw is empty"}`))
+		util.JSON(c, 400, "error", gin.H{"retcode": 400, "retmsg": "name or pw is empty"})
 		return
 	}
 	nameLow := strings.ToLower(rec.Name)
 	if !util.IsUserName(nameLow) {
-		w.Write([]byte(`{"retcode":400,"retmsg":"name fmt err"}`))
+		util.JSON(c, 405, "success", gin.H{"retcode": 400, "retmsg": "name fmt err"})
 		return
 	}
 
 	if !captcha.VerifyString(rec.CaptchaId, rec.CaptchaSolution) {
-		w.Write([]byte(`{"retcode":405,"retmsg":"验证码错误","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
+
+		util.JSON(c, 200, "error", gin.H{"retcode": 405, "retmsg": "验证码错误", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 		return
 	}
 
 	db := h.App.Db
 	timeStamp := uint64(time.Now().UTC().Unix())
-
+	result := &model.Result{
+		Code:    200,
+		Message: "登录成功n",
+		Data:    nil,
+	}
 	if act == "login" {
 		bn := "user_login_token"
 		key := []byte(token + ":loginerr")
@@ -165,33 +142,65 @@ func (h *BaseHandler) UserLoginPost(c *gin.Context) {
 		color.Redln(db)
 		uobj, err := model.UserGetByName(db, nameLow)
 		if err != nil {
-			w.Write([]byte(`{"retcode":405,"retmsg":"json Decode err:` + err.Error() + `","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
+			util.JSON(c, 405, "error", gin.H{"retcode": 405, "retmsg": "json Decode err:` + err.Error() + `", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 			return
 		}
 		if uobj.Password != rec.Password {
 			db.Zset(bn, key, uint64(time.Now().UTC().Unix()))
-			w.Write([]byte(`{"retcode":405,"retmsg":"name and pw not match","newCaptchaId":"` + captcha.NewLen(2) + `"}`))
+			util.JSON(c, 405, "eror", gin.H{"retcode": 405, "retmsg": "name and pw not match", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 			return
 		}
-		sessionid := xid.New().String()
+		expiresTime := time.Now().Unix() + int64(60*60*24)
 		uobj.LastLoginTime = timeStamp
-		uobj.Session = sessionid
-		jb, _ := json.Marshal(uobj)
-		db.Hset("user", youdb.I2b(uobj.Id), jb)
-		h.SetCookie(w, "SessionID", strconv.FormatUint(uobj.Id, 10)+":"+sessionid, 365)
-	}
+		stdClaims := jwt.StandardClaims{
 
-	h.DelCookie(w, "token")
+			Audience:  "啊啊啊",             // 受众
+			ExpiresAt: expiresTime,       // 失效时间
+			Id:        "id",              // 编号
+			IssuedAt:  time.Now().Unix(), // 签发时间
+			Issuer:    "sqlU.Username",   // 签发人
+			NotBefore: time.Now().Unix(), // 生效时间
+			Subject:   "login",           // 主题
+		}
+		newClaims := NewJwtClaims{
+			User:           &uobj,
+			StandardClaims: stdClaims,
+		}
+		tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, newClaims)
+		if token, err := tokenClaims.SignedString(SecretKey); err == nil {
+			result.Message = "登录成功"
+			result.Data = token
+			result.Code = http.StatusOK
+			jb, _ := json.Marshal(uobj)
+			db.Hset("user", youdb.I2b(uobj.Id), jb)
+			c.JSON(result.Code, result)
+		} else {
+			result.Message = "登录失败，请重新登陆"
+			result.Code = http.StatusOK
+			c.JSON(result.Code, gin.H{
+				"result": result,
+			})
+		}
+
+	}
 
 	rsp := response{}
 	rsp.Retcode = 200
-	json.NewEncoder(w).Encode(rsp)
 }
 
 func (h *BaseHandler) UserNotification(c *gin.Context) {
-	currentUser, _ := h.CurrentUser(w, r)
-	if currentUser.Id == 0 {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	userContext, exist := c.Get("user")
+	if !exist {
+		color.Danger.Println("失败了")
+	}
+	//查询用户组及该组的功能权限
+	user, ok := userContext.(model.User) //这个是类型推断,判断接口是什么类型
+	if !ok {
+
+		color.Danger.Println("断言失败")
+	}
+	if user.Id == 0 {
+		//http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
@@ -203,44 +212,43 @@ func (h *BaseHandler) UserNotification(c *gin.Context) {
 	db := h.App.Db
 	scf := h.App.Cf.Site
 
-	tpl := h.CurrentTpl(r)
-
 	evn := &pageData{}
 	evn.SiteCf = scf
 	evn.Title = "站内提醒 - " + scf.Name
-	evn.IsMobile = tpl == "mobile"
+	//evn.IsMobile = tpl == "mobile"
 
-	evn.CurrentUser = currentUser
+	evn.CurrentUser = user
 	evn.ShowSideAd = true
 	evn.PageName = "user_notification"
 	evn.HotNodes = model.CategoryHot(db, scf.CategoryShowNum)
 	evn.NewestNodes = model.CategoryNewest(db, scf.CategoryShowNum)
 
-	evn.PageInfo = model.ArticleNotificationList(db, currentUser.Notice, scf.TimeZone)
+	evn.PageInfo = model.ArticleNotificationList(db, user.Notice, scf.TimeZone)
 
-	// fix currentUser.NoticeNum != len(evn.PageInfo.Items)
-	if currentUser.NoticeNum != len(evn.PageInfo.Items) {
+	// fix user.NoticeNum != len(evn.PageInfo.Items)
+	if user.NoticeNum != len(evn.PageInfo.Items) {
 		var newKeys []string
 		for _, item := range evn.PageInfo.Items {
 			newKeys = append(newKeys, strconv.FormatUint(item.Id, 10))
 		}
 
-		currentUser.Notice = strings.Join(newKeys, ",")
-		currentUser.NoticeNum = len(newKeys)
+		user.Notice = strings.Join(newKeys, ",")
+		user.NoticeNum = len(newKeys)
 
-		jb, _ := json.Marshal(currentUser)
-		db.Hset("user", youdb.I2b(currentUser.Id), jb)
+		jb, _ := json.Marshal(user)
+		db.Hset("user", youdb.I2b(user.Id), jb)
 
-		evn.CurrentUser = currentUser
+		evn.CurrentUser = user
 	}
+	util.JSON(c, 200, "success", evn)
 
-	h.Render(w, tpl, evn, "layout.html", "notification.html")
 }
 
 func (h *BaseHandler) UserLogout(c *gin.Context) {
 	cks := []string{"SessionID", "QQUrlState", "WeiboUrlState", "token"}
 	for _, k := range cks {
-		h.DelCookie(w, k)
+		color.Redln(k)
+		//h.DelCookie(w, k)
 	}
 	//http.Redirect(w, r, "/", http.StatusSeeOther)
 }
@@ -287,8 +295,16 @@ func (h *BaseHandler) UserDetail(c *gin.Context) {
 		util.JSON(c, 500, "error", []byte(err.Error()))
 		return
 	}
+	userContext, exist := c.Get("user")
+	if !exist {
+		color.Danger.Println("失败了")
+	}
+	//查询用户组及该组的功能权限
+	currentUser, ok := userContext.(model.User) //这个是类型推断,判断接口是什么类型
+	if !ok {
 
-	currentUser, _ := h.CurrentUser(w, r)
+		color.Danger.Println("断言失败")
+	}
 
 	if uobj.Hidden && currentUser.Flag < 99 {
 		//w.WriteHeader(http.StatusNotFound)
@@ -319,14 +335,12 @@ func (h *BaseHandler) UserDetail(c *gin.Context) {
 		PageInfo model.ArticlePageInfo
 	}
 
-	tpl := h.CurrentTpl(r)
-
 	evn := &pageData{}
 	evn.SiteCf = scf
 	evn.Title = uobj.Name + " - " + scf.Name
 	evn.Keywords = uobj.Name
 	evn.Description = uobj.About
-	evn.IsMobile = tpl == "mobile"
+	//evn.IsMobile = tpl == "mobile"
 
 	evn.CurrentUser = currentUser
 	evn.ShowSideAd = true
@@ -340,6 +354,5 @@ func (h *BaseHandler) UserDetail(c *gin.Context) {
 		RegTimeFmt: util.TimeFmt(uobj.RegTime, "2006-01-02 15:04", scf.TimeZone),
 	}
 	evn.PageInfo = pageInfo
-
-	h.Render(w, tpl, evn, "layout.html", "user.html")
+	util.JSON(c, 200, "success", evn)
 }

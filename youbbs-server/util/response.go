@@ -23,5 +23,18 @@ func JSON(context *gin.Context, code int, msg string, data ...interface{}) {
 		"success": true,
 		"code":    code,
 	})
+}
+func ErrJSON(context *gin.Context, code int, msg string, data ...interface{}) {
+	responseData := interface{}(nil)
+	if len(data) > 0 {
+		responseData = data[0]
+	}
 
+	color.Red.Println(context)
+	context.JSON(code, gin.H{
+		"data":    responseData,
+		"msg":     msg,
+		"success": true,
+		"code":    code,
+	})
 }

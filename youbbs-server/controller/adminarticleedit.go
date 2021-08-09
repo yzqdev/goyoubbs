@@ -16,10 +16,10 @@ import (
 )
 
 func (h *BaseHandler) ArticleEdit(c *gin.Context) {
-	aid := pat.Param("aid")
+	aid := c.Param("aid")
 	_, err := strconv.Atoi(aid)
 	if err != nil {
-		w.Write([]byte(`{"retcode":400,"retmsg":"cid type err"}`))
+		util.JSON(c, 400, "cid type err", "")
 		return
 	}
 

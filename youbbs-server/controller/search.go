@@ -2,24 +2,29 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gookit/color"
 	"goyoubbs/model"
-	"net/http"
+	"goyoubbs/util"
 	"strings"
 )
 
 func (h *BaseHandler) SearchDetail(c *gin.Context) {
-	currentUser, _ := h.CurrentUser(w, r)
+	userContext, exist := c.Get("user")
+	if !exist {
+		color.Danger.Println("失败了")
+	}
+	//查询用户组及该组的功能权限
+	currentUser, ok := userContext.(model.User) //这个是类型推断,判断接口是什么类型
+	if !ok {
+
+		color.Danger.Println("断言失败")
+	}
 	if currentUser.Id == 0 {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		//http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
-	q := r.FormValue("q")
-
-	if len(q) == 0 {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
+	q := c.PostForm("q")
 
 	qLow := strings.ToLower(q)
 
@@ -40,12 +45,10 @@ func (h *BaseHandler) SearchDetail(c *gin.Context) {
 		PageInfo model.ArticlePageInfo
 	}
 
-	tpl := h.CurrentTpl(r)
-
 	evn := &pageData{}
 	evn.SiteCf = scf
 	evn.Title = qLow + " - " + scf.Name
-	evn.IsMobile = tpl == "mobile"
+	//evn.IsMobile = tpl == "mobile"
 
 	evn.CurrentUser = currentUser
 	evn.ShowSideAd = true
@@ -55,6 +58,5 @@ func (h *BaseHandler) SearchDetail(c *gin.Context) {
 
 	evn.Q = qLow
 	evn.PageInfo = pageInfo
-
-	h.Render(w, tpl, evn, "layout.html", "search.html")
+	util.ErrJSON(c, 200, "success", evn)
 }

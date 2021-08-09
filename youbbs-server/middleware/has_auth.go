@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/gookit/color"
+	"goyoubbs/controller"
 	"goyoubbs/model"
 	"net/http"
 )
@@ -41,7 +42,7 @@ func JwtHandler() gin.HandlerFunc {
 		context.Next()
 	}
 }
-func parseToken(yourToken string) (model.AdminUser, error) {
+func parseToken(yourToken string) (model.User, error) {
 	claims := controller.NewJwtClaims{}
 	_, err := jwt.ParseWithClaims(yourToken, &claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -55,7 +56,7 @@ func parseToken(yourToken string) (model.AdminUser, error) {
 		color.Danger.Println("token值为空")
 
 	}
-	color.Danger.Println(claims.AdminUser, "编译token")
-	return *claims.AdminUser, err
+	color.Danger.Println(claims.User, "编译token")
+	return *claims.User, err
 
 }

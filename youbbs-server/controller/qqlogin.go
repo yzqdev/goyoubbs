@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 	"goyoubbs/lib/qqOAuth"
 	"goyoubbs/model"
