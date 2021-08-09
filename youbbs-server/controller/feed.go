@@ -1,14 +1,14 @@
 package controller
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/gookit/color"
 	"goyoubbs/model"
-	"net/http"
-	"text/template"
+	"goyoubbs/util"
 )
 
-func (h *BaseHandler) FeedHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/atom+xml; charset=utf-8")
-
+func (h *BaseHandler) FeedHandler(c *gin.Context) {
+	c.Header("Content-Type", "application/atom+xml; charset=utf-8")
 	scf := h.App.Cf.Site
 
 	var feed = `<?xml version="1.0" encoding="utf-8"?>
@@ -35,7 +35,7 @@ func (h *BaseHandler) FeedHandler(w http.ResponseWriter, r *http.Request) {
 	{{end}}
 </feed>
 `
-
+	color.Redln(feed)
 	db := h.App.Db
 
 	items := model.ArticleFeedList(db, 20, h.App.Cf.Site.TimeZone)
@@ -45,12 +45,13 @@ func (h *BaseHandler) FeedHandler(w http.ResponseWriter, r *http.Request) {
 		upDate = items[0].AddTimeFmt
 	}
 
-	t := template.Must(template.New("feed").Parse(feed))
-	t.Execute(w, struct {
+	//t := template.Must(template.New("feed").Parse(feed))
+	util.JSON(c, 200, "success", struct {
 		Update string
 		Items  []model.ArticleFeedListItem
 	}{
 		Update: upDate,
 		Items:  items,
 	})
+
 }

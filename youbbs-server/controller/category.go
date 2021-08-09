@@ -1,34 +1,35 @@
 package controller
 
 import (
-	"goyoubbs/goji/pat"
+	"github.com/gin-gonic/gin"
 	"goyoubbs/model"
+	"goyoubbs/util"
 	"goyoubbs/youdb"
 	"net/http"
 	"strconv"
 )
 
-func (h *BaseHandler) CategoryDetail(w http.ResponseWriter, r *http.Request) {
-	btn, key, score := r.FormValue("btn"), r.FormValue("key"), r.FormValue("score")
+func (h *BaseHandler) CategoryDetail(c *gin.Context) {
+	btn, key, score := c.PostForm("btn"), c.PostForm("key"), c.PostForm("score")
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
 		if err != nil {
-			w.Write([]byte(`{"retcode":400,"retmsg":"key type err"}`))
+			util.JSON(c, 400, "key", `{"retcode":400,"retmsg":"key type err"}`)
 			return
 		}
 	}
 	if len(score) > 0 {
 		_, err := strconv.ParseUint(score, 10, 64)
 		if err != nil {
-			w.Write([]byte(`{"retcode":400,"retmsg":"score type err"}`))
+			util.JSON(c, 400, "key", `{"retcode":400,"retmsg":"score type err"}`)
 			return
 		}
 	}
 
-	cid := pat.Param(r, "cid")
+	cid := c.PostForm("cid")
 	_, err := strconv.Atoi(cid)
 	if err != nil {
-		w.Write([]byte(`{"retcode":400,"retmsg":"cid type err"}`))
+		util.JSON(c, 400, "key", `{"retcode":400,"retmsg":"cid type err"}`)
 		return
 	}
 
@@ -41,15 +42,15 @@ func (h *BaseHandler) CategoryDetail(w http.ResponseWriter, r *http.Request) {
 	scf := h.App.Cf.Site
 	cobj, err := model.CategoryGetById(db, cid)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		util.JSON(c, 400, "key", []byte(err.Error()))
 		return
 	}
 
 	currentUser, _ := h.CurrentUser(w, r)
 
 	if cobj.Hidden && currentUser.Flag < 99 {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte(`{"retcode":404,"retmsg":"not found"}`))
+		c.WriteHeader(http.StatusNotFound)
+		util.JSON(c, 404, "key", "not found")
 		return
 	}
 	cobj.Articles = db.Zget("category_article_num", youdb.I2b(cobj.Id)).Uint64()
@@ -78,6 +79,5 @@ func (h *BaseHandler) CategoryDetail(w http.ResponseWriter, r *http.Request) {
 
 	evn.Cobj = cobj
 	evn.PageInfo = pageInfo
-
-	h.Render(w, tpl, evn, "layout.html", "category.html")
+	util.JSON(c, 200, "success", evn)
 }

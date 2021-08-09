@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"github.com/dchest/captcha"
+	"github.com/gin-gonic/gin"
 	"github.com/gookit/color"
 	"github.com/rs/xid"
 	"goyoubbs/goji/pat"
@@ -187,7 +188,7 @@ func (h *BaseHandler) UserLoginPost(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(rsp)
 }
 
-func (h *BaseHandler) UserNotification(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) UserNotification(c *gin.Context) {
 	currentUser, _ := h.CurrentUser(w, r)
 	if currentUser.Id == 0 {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -236,27 +237,27 @@ func (h *BaseHandler) UserNotification(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, tpl, evn, "layout.html", "notification.html")
 }
 
-func (h *BaseHandler) UserLogout(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) UserLogout(c *gin.Context) {
 	cks := []string{"SessionID", "QQUrlState", "WeiboUrlState", "token"}
 	for _, k := range cks {
 		h.DelCookie(w, k)
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	//http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (h *BaseHandler) UserDetail(w http.ResponseWriter, r *http.Request) {
-	act, btn, key, score := r.FormValue("act"), r.FormValue("btn"), r.FormValue("key"), r.FormValue("score")
+func (h *BaseHandler) UserDetail(c *gin.Context) {
+	act, btn, key, score := c.PostForm("act"), c.PostForm("btn"), c.PostForm("key"), c.PostForm("score")
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
 		if err != nil {
-			w.Write([]byte(`{"retcode":400,"retmsg":"key type err"}`))
+			util.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"key type err"}`))
 			return
 		}
 	}
 	if len(score) > 0 {
 		_, err := strconv.ParseUint(score, 10, 64)
 		if err != nil {
-			w.Write([]byte(`{"retcode":400,"retmsg":"score type err"}`))
+			util.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"score type err"}`))
 			return
 		}
 	}
@@ -264,15 +265,15 @@ func (h *BaseHandler) UserDetail(w http.ResponseWriter, r *http.Request) {
 	db := h.App.Db
 	scf := h.App.Cf.Site
 
-	uid := pat.Param(r, "uid")
+	uid := c.Param("uid")
 	uidi, err := strconv.ParseUint(uid, 10, 64)
 	if err != nil {
 		uid = model.UserGetIdByName(db, strings.ToLower(uid))
 		if uid == "" {
-			w.Write([]byte(`{"retcode":400,"retmsg":"uid type err"}`))
+			util.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"uid type err"}`))
 			return
 		}
-		http.Redirect(w, r, "/member/"+uid, 301)
+		//http.Redirect(w, r, "/member/"+uid, 301)
 		return
 	}
 
@@ -283,15 +284,15 @@ func (h *BaseHandler) UserDetail(w http.ResponseWriter, r *http.Request) {
 
 	uobj, err := model.UserGetById(db, uidi)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		util.JSON(c, 500, "error", []byte(err.Error()))
 		return
 	}
 
 	currentUser, _ := h.CurrentUser(w, r)
 
 	if uobj.Hidden && currentUser.Flag < 99 {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte(`{"retcode":404,"retmsg":"not found"}`))
+		//w.WriteHeader(http.StatusNotFound)
+		//w.Write([]byte(`{"retcode":404,"retmsg":"not found"}`))
 		return
 	}
 

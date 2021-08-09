@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/gookit/color"
 	"github.com/rs/xid"
 	"goyoubbs/model"
@@ -14,7 +15,7 @@ import (
 	"time"
 )
 
-func (h *BaseHandler) UserSetting(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) UserSetting(c *gin.Context) {
 	currentUser, _ := h.CurrentUser(w, r)
 	if currentUser.Id == 0 {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -46,7 +47,7 @@ func (h *BaseHandler) UserSetting(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, tpl, evn, "layout.html", "usersetting.html")
 }
 
-func (h *BaseHandler) UserSettingPost(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) UserSettingPost(c *gin.Context) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	token := h.GetCookie(r, "token")

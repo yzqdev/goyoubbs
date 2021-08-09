@@ -3,16 +3,13 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"github.com/gin-gonic/gin"
 	"github.com/gookit/color"
 	"github.com/gorilla/securecookie"
 	"github.com/xi2/httpgzip"
 	"golang.org/x/crypto/acme/autocert"
 	"golang.org/x/net/http2"
-	"goyoubbs/controller"
 	"goyoubbs/cronjob"
-	"goyoubbs/goji"
-	"goyoubbs/goji/pat"
-	"goyoubbs/router"
 	"goyoubbs/system"
 	"goyoubbs/util"
 	"goyoubbs/youdb"
@@ -102,25 +99,22 @@ func main() {
 	cr := cronjob.BaseHandler{App: app}
 	go cr.MainCronJob()
 
-	root := goji.NewMux()
+	root := gin.Default()
 
 	// static file server
 	staticPath := mcf.PubDir
 	if len(staticPath) == 0 {
 		staticPath = "static"
 	}
-
-	root.Handle(pat.New("/.well-known/acme-challenge/*"),
-		http.StripPrefix("/.well-known/acme-challenge/", http.FileServer(http.Dir(staticPath))))
-	root.Handle(pat.New(controller.GetAppHome("/*")),
-		http.StripPrefix(controller.GetAppHome("/"), http.FileServer(http.Dir(staticPath))))
-	root.Handle(pat.New("/static/*"),
-		http.StripPrefix("/static/", http.FileServer(http.Dir(staticPath))))
-
-	root.Handle(pat.New("/*"), router.NewRouter(app))
-
-	// normal http
-	// http.ListenAndServe(listenAddr, root)
+	//
+	//root.Handle(pat.New("/.well-known/acme-challenge/*"),
+	//	http.StripPrefix("/.well-known/acme-challenge/", http.FileServer(http.Dir(staticPath))))
+	//root.Handle(pat.New(controller.GetAppHome("/*")),
+	//	http.StripPrefix(controller.GetAppHome("/"), http.FileServer(http.Dir(staticPath))))
+	//root.Handle(pat.New("/static/*"),
+	//	http.StripPrefix("/static/", http.FileServer(http.Dir(staticPath))))
+	//
+	//root.Handle(pat.New("/*"),  NewRouter(app))
 
 	var srv *http.Server
 
@@ -129,8 +123,8 @@ func main() {
 		log.Println("Register sll for domain:", mcf.Domain)
 		log.Println("TLSCrtFile : ", mcf.TLSCrtFile)
 		log.Println("TLSKeyFile : ", mcf.TLSKeyFile)
-
-		root.Use(stlAge)
+		//下面是添加https
+		//root.Use(stlAge)
 
 		tlsCf := &tls.Config{
 			NextProtos: []string{http2.NextProtoTLS, "http/1.1"},
@@ -185,22 +179,7 @@ func main() {
 		log.Println("Web server URL", "https://"+mcf.Domain)
 
 	} else {
-		// http
-		srv = &http.Server{
-			Addr:         ":" + strconv.Itoa(mcf.HttpPort),
-			Handler:      root,
-			ReadTimeout:  6 * time.Second,
-			WriteTimeout: 10 * time.Second,
-			BaseContext:  func(_ net.Listener) context.Context { return ctx },
-		}
-		srv.RegisterOnShutdown(cancel)
-
-		go func() {
-			if err := srv.ListenAndServe(); err != http.ErrServerClosed {
-				// it is fine to use Fatal here because it is not main gorutine
-				log.Fatalf("HTTP server ListenAndServe: %v", err)
-			}
-		}()
+		root.Run(":" + strconv.Itoa(mcf.HttpsPort))
 
 		log.Println("Web server Listen port", mcf.HttpPort)
 	}

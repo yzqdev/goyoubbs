@@ -5,6 +5,8 @@ go 1.13
 require (
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/disintegration/imaging v1.6.2
+	github.com/gin-gonic/gin v1.7.3
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gookit/color v1.4.2
 	github.com/gorilla/securecookie v1.1.1
 	github.com/h2non/filetype v1.1.1

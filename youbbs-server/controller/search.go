@@ -1,12 +1,13 @@
 package controller
 
 import (
+	"github.com/gin-gonic/gin"
 	"goyoubbs/model"
 	"net/http"
 	"strings"
 )
 
-func (h *BaseHandler) SearchDetail(w http.ResponseWriter, r *http.Request) {
+func (h *BaseHandler) SearchDetail(c *gin.Context) {
 	currentUser, _ := h.CurrentUser(w, r)
 	if currentUser.Id == 0 {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
