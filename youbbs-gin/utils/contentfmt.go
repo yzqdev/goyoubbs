@@ -28,7 +28,7 @@ var (
 	aTagRegexp = regexp.MustCompile(`(?m)(<a[^<]+?>.*?</a>)`)
 )
 
-func ContentFmt(db *youdb.DB, mdm, input string) string {
+func ContentFmt(mdm, input string) string {
 	input = strings.TrimSpace(input)
 
 	if strings.Contains(input, "@") {
@@ -92,7 +92,7 @@ func ContentFmt(db *youdb.DB, mdm, input string) string {
 }
 
 // ContentFmtBak 文本格式化
-func ContentFmtBak(db *youdb.DB, input string) string {
+func ContentFmtBak(input string) string {
 	if strings.Index(input, "```") >= 0 {
 		sepNum := strings.Count(input, "```")
 		if sepNum < 2 {
@@ -132,7 +132,7 @@ type urlInfo struct {
 	Click string
 }
 
-func ContentRich(db *youdb.DB, input string) string {
+func ContentRich(input string) string {
 	input = strings.TrimSpace(input)
 	input = " " + input // fix Has url Prefix
 	input = strings.Replace(input, "<", "&lt;", -1)

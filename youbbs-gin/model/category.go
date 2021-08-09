@@ -3,7 +3,6 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"goyoubbs/youdb"
 	"strconv"
 	"strings"
 )
@@ -29,7 +28,7 @@ type CategoryPageInfo struct {
 	LastKey  uint64     `json:"lastkey"`
 }
 
-func CategoryGetById(db *youdb.DB, cid string) (Category, error) {
+func CategoryGetById(cid string) (Category, error) {
 	obj := Category{}
 	rs := db.Hget("category", youdb.DS2b(cid))
 	if rs.State == "ok" {
@@ -39,7 +38,7 @@ func CategoryGetById(db *youdb.DB, cid string) (Category, error) {
 	return obj, errors.New(rs.State)
 }
 
-func CategoryHot(db *youdb.DB, limit int) []CategoryMini {
+func CategoryHot(limit int) []CategoryMini {
 	var items []CategoryMini
 	rs := db.Zrscan("category_article_num", []byte(""), []byte(""), limit)
 	if rs.State == "ok" {
@@ -61,7 +60,7 @@ func CategoryHot(db *youdb.DB, limit int) []CategoryMini {
 	return items
 }
 
-func CategoryNewest(db *youdb.DB, limit int) []CategoryMini {
+func CategoryNewest(limit int) []CategoryMini {
 	var items []CategoryMini
 	rs := db.Hrscan("category", []byte(""), limit)
 	if rs.State == "ok" {
@@ -74,7 +73,7 @@ func CategoryNewest(db *youdb.DB, limit int) []CategoryMini {
 	return items
 }
 
-func CategoryGetMain(db *youdb.DB, currentCobj Category) []CategoryMini {
+func CategoryGetMain(currentCobj Category) []CategoryMini {
 	var items []CategoryMini
 	item := CategoryMini{
 		Id:   currentCobj.Id,
@@ -107,7 +106,7 @@ func CategoryGetMain(db *youdb.DB, currentCobj Category) []CategoryMini {
 	return items
 }
 
-func CategoryList(db *youdb.DB, cmd, key string, limit int) CategoryPageInfo {
+func CategoryList(cmd, key string, limit int) CategoryPageInfo {
 	tb := "category"
 	var items []Category
 	var keys [][]byte

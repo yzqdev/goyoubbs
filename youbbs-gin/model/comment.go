@@ -3,8 +3,6 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"goyoubbs/util"
-	"goyoubbs/youdb"
 	"html/template"
 )
 
@@ -37,7 +35,7 @@ type CommentPageInfo struct {
 	LastKey  uint64            `json:"lastkey"`
 }
 
-func CommentGetByKey(db *youdb.DB, aid string, cid uint64) (Comment, error) {
+func CommentGetByKey(aid string, cid uint64) (Comment, error) {
 	obj := Comment{}
 	rs := db.Hget("article_comment:"+aid, youdb.I2b(cid))
 	if rs.State == "ok" {
@@ -47,16 +45,16 @@ func CommentGetByKey(db *youdb.DB, aid string, cid uint64) (Comment, error) {
 	return obj, errors.New(rs.State)
 }
 
-func CommentSetByKey(db *youdb.DB, aid string, cid uint64, obj Comment) error {
+func CommentSetByKey(aid string, cid uint64, obj Comment) error {
 	jb, _ := json.Marshal(obj)
 	return db.Hset("article_comment:"+aid, youdb.I2b(cid), jb)
 }
 
-func CommentDelByKey(db *youdb.DB, aid string, cid uint64) error {
+func CommentDelByKey(aid string, cid uint64) error {
 	return db.Hdel("article_comment:"+aid, youdb.I2b(cid))
 }
 
-func CommentList(db *youdb.DB, mdm, cmd, tb, key string, limit, tz int) CommentPageInfo {
+func CommentList(mdm, cmd, tb, key string, limit, tz int) CommentPageInfo {
 	var items []CommentListItem
 	var citems []Comment
 	userMap := map[uint64]UserMini{}

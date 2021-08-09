@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"ginblog/model"
+	"ginblog/utils"
 	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -37,17 +38,17 @@ func Register(c *gin.Context) {
 	// register
 	siteCf := h.App.Cf.Site
 	if siteCf.QQClientID > 0 || siteCf.WeiboClientID > 0 {
-		util.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "请用QQ 或 微博一键登录"})
+		utils.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "请用QQ 或 微博一键登录"})
 		return
 	}
 	if siteCf.CloseReg {
-		util.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "stop to new register"})
+		utils.JSON(c, 400, "err", gin.H{"retcode": 400, "retmsg": "stop to new register"})
 		return
 	}
 	var nameLow string
 	if db.Hget("user_name2uid", []byte(nameLow)).State == "ok" {
 
-		util.JSON(c, 405, "err", gin.H{"retcode": 405, "retmsg": "name is exist", "newCaptchaId": "` + captcha.NewLen(2) + `"})
+		utils.JSON(c, 405, "err", gin.H{"retcode": 405, "retmsg": "name is exist", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 		return
 	}
 
@@ -86,12 +87,12 @@ func Register(c *gin.Context) {
 	db.Hset("user_flag:"+strconv.Itoa(flag), youdb.I2b(uobj.Id), []byte(""))
 
 }
-func (h *BaseHandler) UserLoginPost(c *gin.Context) {
+func UserLoginPost(c *gin.Context) {
 	c.Header("Content-Type", "application/json; charset=UTF-8")
 	token := c.GetHeader("token")
 	if len(token) == 0 {
 		//w.Write([]byte(`{"retcode":400,"retmsg":"token cookie missed"}`))
-		util.JSON(c, 400, "error", gin.H{"retcode": 400, "retmsg": "token cookie missed"})
+		utils.JSON(c, 400, "error", gin.H{"retcode": 400, "retmsg": "token cookie missed"})
 
 	}
 
@@ -104,18 +105,18 @@ func (h *BaseHandler) UserLoginPost(c *gin.Context) {
 	}
 
 	if len(rec.Name) == 0 || len(rec.Password) == 0 {
-		util.JSON(c, 400, "error", gin.H{"retcode": 400, "retmsg": "name or pw is empty"})
+		utils.JSON(c, 400, "error", gin.H{"retcode": 400, "retmsg": "name or pw is empty"})
 		return
 	}
 	nameLow := strings.ToLower(rec.Name)
 	if !util.IsUserName(nameLow) {
-		util.JSON(c, 405, "success", gin.H{"retcode": 400, "retmsg": "name fmt err"})
+		utils.JSON(c, 405, "success", gin.H{"retcode": 400, "retmsg": "name fmt err"})
 		return
 	}
 
 	if !captcha.VerifyString(rec.CaptchaId, rec.CaptchaSolution) {
 
-		util.JSON(c, 200, "error", gin.H{"retcode": 405, "retmsg": "验证码错误", "newCaptchaId": "` + captcha.NewLen(2) + `"})
+		utils.JSON(c, 200, "error", gin.H{"retcode": 405, "retmsg": "验证码错误", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 		return
 	}
 
@@ -139,12 +140,12 @@ func (h *BaseHandler) UserLoginPost(c *gin.Context) {
 		color.Redln(db)
 		uobj, err := model.UserGetByName(db, nameLow)
 		if err != nil {
-			util.JSON(c, 405, "error", gin.H{"retcode": 405, "retmsg": "json Decode err:` + err.Error() + `", "newCaptchaId": "` + captcha.NewLen(2) + `"})
+			utils.JSON(c, 405, "error", gin.H{"retcode": 405, "retmsg": "json Decode err:` + err.Error() + `", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 			return
 		}
 		if uobj.Password != rec.Password {
 			db.Zset(bn, key, uint64(time.Now().UTC().Unix()))
-			util.JSON(c, 405, "eror", gin.H{"retcode": 405, "retmsg": "name and pw not match", "newCaptchaId": "` + captcha.NewLen(2) + `"})
+			utils.JSON(c, 405, "eror", gin.H{"retcode": 405, "retmsg": "name and pw not match", "newCaptchaId": "` + captcha.NewLen(2) + `"})
 			return
 		}
 		expiresTime := time.Now().Unix() + int64(60*60*24)
@@ -185,7 +186,7 @@ func (h *BaseHandler) UserLoginPost(c *gin.Context) {
 	rsp.Retcode = 200
 }
 
-func (h *BaseHandler) UserNotification(c *gin.Context) {
+func UserNotification(c *gin.Context) {
 	userContext, exist := c.Get("user")
 	if !exist {
 		color.Danger.Println("失败了")
@@ -237,7 +238,7 @@ func (h *BaseHandler) UserNotification(c *gin.Context) {
 
 		evn.CurrentUser = user
 	}
-	util.JSON(c, 200, "success", evn)
+	utils.JSON(c, 200, "success", evn)
 
 }
 
@@ -255,14 +256,14 @@ func (h *BaseHandler) UserDetail(c *gin.Context) {
 	if len(key) > 0 {
 		_, err := strconv.ParseUint(key, 10, 64)
 		if err != nil {
-			util.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"key type err"}`))
+			utils.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"key type err"}`))
 			return
 		}
 	}
 	if len(score) > 0 {
 		_, err := strconv.ParseUint(score, 10, 64)
 		if err != nil {
-			util.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"score type err"}`))
+			utils.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"score type err"}`))
 			return
 		}
 	}
@@ -275,7 +276,7 @@ func (h *BaseHandler) UserDetail(c *gin.Context) {
 	if err != nil {
 		uid = model.UserGetIdByName(db, strings.ToLower(uid))
 		if uid == "" {
-			util.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"uid type err"}`))
+			utils.JSON(c, 200, "success", []byte(`{"retcode":400,"retmsg":"uid type err"}`))
 			return
 		}
 		//http.Redirect(w, r, "/member/"+uid, 301)
@@ -287,9 +288,9 @@ func (h *BaseHandler) UserDetail(c *gin.Context) {
 		cmd = "scan"
 	}
 
-	uobj, err := model.UserGetById(db, uidi)
+	uobj := model.UserGetById(uidi)
 	if err != nil {
-		util.JSON(c, 500, "error", []byte(err.Error()))
+		utils.JSON(c, 500, "error", []byte(err.Error()))
 		return
 	}
 	userContext, exist := c.Get("user")
@@ -351,5 +352,5 @@ func (h *BaseHandler) UserDetail(c *gin.Context) {
 		RegTimeFmt: util.TimeFmt(uobj.RegTime, "2006-01-02 15:04", scf.TimeZone),
 	}
 	evn.PageInfo = pageInfo
-	util.JSON(c, 200, "success", evn)
+	utils.JSON(c, 200, "success", evn)
 }

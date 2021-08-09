@@ -42,22 +42,19 @@ type UserPageInfo struct {
 	LastKey  uint64 `json:"lastkey"`
 }
 
-func UserGetById(uid uint64) (User, error) {
-	obj := User{}
-	rs := db.Hget("user", youdb.I2b(uid))
-	if rs.State == "ok" {
-		json.Unmarshal(rs.Data[0], &obj)
-		return obj, nil
-	}
-	return obj, errors.New(rs.State)
+func UserGetById(uid uint64) *User {
+	user := &User{}
+	db := GetDb()
+	db.Table("user").Where("id = ?", uid).First(&user)
+	return user
 }
 
-func UserUpdate(db *youdb.DB, obj User) error {
+func UserUpdate(obj User) error {
 	jb, _ := json.Marshal(obj)
 	return db.Hset("user", youdb.I2b(obj.Id), jb)
 }
 
-func UserGetByName(db *youdb.DB, name string) (User, error) {
+func UserGetByName(name string) (User, error) {
 	obj := User{}
 
 	rs := db.Hget("user_name2uid", []byte(name))
@@ -73,7 +70,7 @@ func UserGetByName(db *youdb.DB, name string) (User, error) {
 	return obj, errors.New(rs.State)
 }
 
-func UserGetIdByName(db *youdb.DB, name string) string {
+func UserGetIdByName(name string) string {
 	rs := db.Hget("user_name2uid", []byte(name))
 	if rs.State == "ok" {
 		return youdb.B2ds(rs.Data[0])
@@ -81,7 +78,7 @@ func UserGetIdByName(db *youdb.DB, name string) string {
 	return ""
 }
 
-func UserListByFlag(db *youdb.DB, cmd, tb, key string, limit int) UserPageInfo {
+func UserListByFlag(cmd, tb, key string, limit int) UserPageInfo {
 	var items []User
 	var keys [][]byte
 	var hasPrev, hasNext bool

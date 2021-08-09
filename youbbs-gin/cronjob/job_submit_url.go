@@ -34,7 +34,7 @@ var httpClient = &http.Client{
 }
 
 // submit URL to baidu bing
-func submitUrl(db *youdb.DB, scf *system.SiteConf) {
+func submitUrl(scf *system.SiteConf) {
 	var startKey []byte
 	var curKey []byte
 	var curValue []byte

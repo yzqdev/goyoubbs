@@ -3,8 +3,6 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"goyoubbs/util"
-	"goyoubbs/youdb"
 	"html"
 	"sort"
 	"strings"
@@ -92,17 +90,15 @@ type ArticleTag struct {
 	NewTags string
 }
 
-func ArticleGetById(db *youdb.DB, aid string) (Article, error) {
+func ArticleGetById(aid string) Article {
 	obj := Article{}
-	rs := db.Hget("article", youdb.DS2b(aid))
-	if rs.State == "ok" {
-		json.Unmarshal(rs.Data[0], &obj)
-		return obj, nil
-	}
-	return obj, errors.New(rs.State)
+
+	db := GetDb()
+	db.Table("article").Where("aid = ?", aid).First(&obj)
+	return obj
 }
 
-func ArticleList(db *youdb.DB, cmd, tb, key, score string, limit, tz int) ArticlePageInfo {
+func ArticleList(cmd, tb, key, score string, limit, tz int) ArticlePageInfo {
 	var items []ArticleListItem
 	var keys [][]byte
 	var hasPrev, hasNext bool
@@ -224,7 +220,7 @@ func ArticleList(db *youdb.DB, cmd, tb, key, score string, limit, tz int) Articl
 	}
 }
 
-func ArticleGetRelative(db *youdb.DB, aid uint64, tags string) ArticleRelative {
+func ArticleGetRelative(aid uint64, tags string) ArticleRelative {
 	if len(tags) == 0 {
 		return ArticleRelative{}
 	}
@@ -312,7 +308,7 @@ func ArticleGetRelative(db *youdb.DB, aid uint64, tags string) ArticleRelative {
 	}
 }
 
-func UserArticleList(db *youdb.DB, cmd, tb, key string, limit, tz int) ArticlePageInfo {
+func UserArticleList(cmd, tb, key string, limit, tz int) ArticlePageInfo {
 	var items []ArticleListItem
 	var keys [][]byte
 
@@ -426,7 +422,7 @@ func UserArticleList(db *youdb.DB, cmd, tb, key string, limit, tz int) ArticlePa
 	}
 }
 
-func ArticleNotificationList(db *youdb.DB, ids string, tz int) ArticlePageInfo {
+func ArticleNotificationList(ids string, tz int) ArticlePageInfo {
 	var items []ArticleListItem
 	var keys [][]byte
 
@@ -505,7 +501,7 @@ func ArticleNotificationList(db *youdb.DB, ids string, tz int) ArticlePageInfo {
 	return ArticlePageInfo{Items: items}
 }
 
-func ArticleSearchList(db *youdb.DB, where, kw string, limit, tz int) ArticlePageInfo {
+func ArticleSearchList(where, kw string, limit, tz int) ArticlePageInfo {
 	var items []ArticleListItem
 
 	var aitems []Article
@@ -605,7 +601,7 @@ func ArticleSearchList(db *youdb.DB, where, kw string, limit, tz int) ArticlePag
 	return ArticlePageInfo{Items: items}
 }
 
-func ArticleFeedList(db *youdb.DB, limit, tz int) []ArticleFeedListItem {
+func ArticleFeedList(limit, tz int) []ArticleFeedListItem {
 	var items []ArticleFeedListItem
 	var keys [][]byte
 	keyStart := []byte("")

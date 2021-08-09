@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/json"
-	"goyoubbs/youdb"
 	"sort"
 )
 
@@ -13,7 +12,7 @@ type Link struct {
 	Score int    `json:"score"`
 }
 
-func LinkGetById(db *youdb.DB, lid string) Link {
+func LinkGetById(lid string) Link {
 	var item Link
 	rs := db.Hget("link", youdb.DS2b(lid))
 	if rs.State == "ok" {
@@ -22,7 +21,7 @@ func LinkGetById(db *youdb.DB, lid string) Link {
 	return item
 }
 
-func LinkSet(db *youdb.DB, obj Link) {
+func LinkSet(obj Link) {
 	if obj.Id == 0 {
 		// add
 		var newId uint64
@@ -36,7 +35,7 @@ func LinkSet(db *youdb.DB, obj Link) {
 	db.Hset("link", youdb.I2b(obj.Id), jb)
 }
 
-func LinkList(db *youdb.DB, getAll bool) []Link {
+func LinkList(getAll bool) []Link {
 	var items []Link
 	itemMap := map[uint64]Link{}
 
