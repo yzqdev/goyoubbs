@@ -1,8 +1,8 @@
 package model
 
 import (
-	"ginblog/config"
-	"gorm.io/driver/mysql"
+	"fmt"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -11,15 +11,23 @@ type Database struct {
 }
 
 var DB *gorm.DB
+var sqlType string
 
 // Init Open mysql 连接
 func init() {
-	g := config.GetGlobal()
-
-	dsn := g.Mysql.User + ":" + g.Mysql.Pass + "@tcp(127.0.0.1:3306)/" + g.Mysql.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		return
+	var db *gorm.DB
+	if sqlType == "mysql" {
+		//dsn := g.Mysql.User + ":" + g.Mysql.Pass + "@tcp(127.0.0.1:3306)/" + g.Mysql.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
+		//db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		//if err != nil {
+		//	return
+		//}
+	} else {
+		var err error
+		db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+		if err != nil {
+			fmt.Println("失败了")
+		}
 	}
 
 	DB = db

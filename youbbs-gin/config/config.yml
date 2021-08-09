@@ -3,3 +3,58 @@ mysql:
   name: ginblog
   user: root
   pass: 123456
+Main:
+  HttpPort: 8040
+  HttpsOn: false
+  Domain: ""
+  HttpsPort: 443
+  PubDir: "static"
+  ViewDir: "view/default"
+  Youdb: "mydata.db"
+  CookieSecure: false
+  CookieHttpOnly: true
+  OldSiteDomain: ""
+  TLSCrtFile: ""
+  TLSKeyFile: ""
+Site:
+  Name: "杨总后花园"
+  Desc: "杨总的后宫,其实"
+  AdminEmail: ""
+  MainDomain: "http://127.0.0.1:8040"
+  MainNodeIds: "1,2,3,4,5,6,7,8,9,10"
+  TimeZone: 8
+  HomeShowNum: 20
+  PageShowNum: 20
+  TagShowNum: 20
+  CategoryShowNum: 20
+  TitleMaxLen: 180
+  ContentMaxLen: 9000
+  PostInterval: 60
+  CommentListNum: 10
+  CommentInterval: 20
+  Authorized: false
+  RegReview: false
+  CloseReg: false
+  AutoDataBackup: false
+  ResetCookieKey: false
+  AutoGetTag: true
+  GetTagApi: "https://youbbs.org/api/fenci"
+  QQClientID: 0
+  QQClientSecret: ""
+  WeiboClientID: 0
+  WeiboClientSecret: ""
+  UploadSuffix: ""
+  UploadImgOnly: false
+  UploadImgResize: false
+  UploadMaxSize: 50
+  QiniuAccessKey: ""
+  QiniuSecretKey: ""
+  QiniuDomain: ""
+  QiniuBucket: ""
+  UpyunDomain: ""
+  UpyunBucket: ""
+  UpyunUser: ""
+  UpyunPw: ""
+  BaiduSubUrl: ""
+  BingSubUrl: ""
+
