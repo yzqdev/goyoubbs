@@ -3,7 +3,7 @@ package system
 import (
 	"fmt"
 	"github.com/gorilla/securecookie"
-	"github.com/qiniu/api.v7/storage"
+	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/spf13/viper"
 	"goyoubbs/youdb"
 )
